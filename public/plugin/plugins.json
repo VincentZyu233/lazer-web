@@ -48,7 +48,7 @@
       "license": "MIT",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-kugou",
       "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.kugou/0.1.0/lazer.kugou.zip",
-      "sha256": "75d91e77e217d7a51eb02f8cd876d67f2b182ddd57a361ffddc7c88c45492fc3",
+      "sha256": "d54087f5989c8543e65730bbac761b1aafc1a8f513cd726fe05b5c16ec1333de",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "kugou", "lua"],
       "minAppVersion": "2.0.0",
