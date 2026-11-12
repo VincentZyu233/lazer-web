@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-11T00:40:00+08:00",
+  "updatedAt": "2026-11-12T17:20:00+08:00",
   "plugins": [
     {
       "id": "lazer.netease",
@@ -26,6 +26,33 @@
       "tags": ["gateway", "netease", "lua"],
       "minAppVersion": "2.0.0",
       "updatedAt": "2026-11-11"
+    },
+    {
+      "id": "lazer.kugou",
+      "name": {
+        "zh-CN": "酷狗音乐",
+        "zh-Hant": "酷狗音樂",
+        "ja": "Kugou Music",
+        "en": "Kugou Music"
+      },
+      "summary": {
+        "zh-CN": "酷狗音乐 Lua Gateway 插件，支持高品质播放、歌词、自建与推荐歌单、私人电台与登录。",
+        "zh-Hant": "酷狗音樂 Lua Gateway 外掛，支援高音質播放、歌詞、自建與推薦歌單、私人電台與登入。",
+        "ja": "Kugou Music の Lua Gateway プラグイン。高音質再生、歌詞、プレイリスト、おすすめラジオ、ログインに対応。",
+        "en": "A Lua gateway plugin for Kugou Music with HD streaming, lyrics, custom and cloud playlists, radio, and sign-in."
+      },
+      "author": "VincentZyu",
+      "authorUrl": "https://github.com/VincentZyu233",
+      "type": "open-source",
+      "version": "0.1.0",
+      "license": "MIT",
+      "repo": "https://github.com/VincentZyu233/lazer-plugin-kugou",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.kugou/0.1.0/lazer.kugou.zip",
+      "sha256": "75d91e77e217d7a51eb02f8cd876d67f2b182ddd57a361ffddc7c88c45492fc3",
+      "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
+      "tags": ["gateway", "kugou", "lua"],
+      "minAppVersion": "2.0.0",
+      "updatedAt": "2026-11-12"
     }
   ]
 }
