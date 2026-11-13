@@ -140,6 +140,10 @@ Lazer 正在把通用 UI 抽象为声明式主题和页面布局。当前内置�
 对应文字层级，宿主会限幅并映射到可用字重。皮肤操作失败只会回退到内置 Apple 主题，
 不会阻止音乐平台启动。
 
+插件清单可以额外声明 `permissions.websocket` 域名列表。WebSocket 连接必须由用户在
+插件管理中单独授权；Lua 侧使用 `host.websocket({operation, id, url, data})` 打开、发送、
+接收和关闭连接。未获授权时运行时不会建立连接。
+
 歌词组件也使用同一组令牌：`lyricWeight`、`lyricTranslationWeight`、字号倍率、行高、
 翻译间距、焦点透明度和 `lyricTextAlign` 都可由 Lua 改写。滚动同样开放给主题：
 `lyricSpringMassScale`、`lyricSpringStiffnessScale`、`lyricSpringDampingScale` 控制弹簧，
