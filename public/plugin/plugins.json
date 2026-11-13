@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-13T16:00:00+08:00",
+  "updatedAt": "2026-11-14T01:30:00+08:00",
   "plugins": [
     {
       "id": "lazer.netease",
@@ -18,10 +18,10 @@
       },
       "author": "Illusion",
       "type": "closed-source",
-      "version": "1.3.1",
+      "version": "1.3.2",
       "license": "Private",
-      "download": "https://lazer.naominet.dev/plugin/Illusion/lazer.netease/1.3.1/lazer.netease.zip",
-      "sha256": "aed426dc1d2930340d8a9c16a377d85546180c33f68499ade4943255e5eea45b",
+      "download": "https://lazer.naominet.dev/plugin/Illusion/lazer.netease/1.3.2/lazer.netease.zip",
+      "sha256": "f73dd2b5a579d576b4ca95641de36db0d1631a4b2590403eacc2b6a12852b4c0",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "netease", "lua"],
       "minAppVersion": "2.0.0",
@@ -44,15 +44,15 @@
       "author": "VincentZyu",
       "authorUrl": "https://github.com/VincentZyu233",
       "type": "open-source",
-      "version": "0.1.0",
+      "version": "0.1.3",
       "license": "MIT",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-kugou",
-      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.kugou/0.1.0/lazer.kugou.zip",
-      "sha256": "75d91e77e217d7a51eb02f8cd876d67f2b182ddd57a361ffddc7c88c45492fc3",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.kugou/0.1.3/lazer.kugou.zip",
+      "sha256": "125f2f72c1e1c66027c82bd979247e87ff2822c21698fad50d3751e80e012396",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "kugou", "lua"],
       "minAppVersion": "2.0.0",
-      "updatedAt": "2026-11-12"
+      "updatedAt": "2026-11-13"
     },
     {
       "id": "lazer.youtube",
@@ -63,23 +63,23 @@
         "en": "YouTube Music"
       },
       "summary": {
-        "zh-CN": "YouTube Music Lua Gateway 插件，支持毫秒级精准时序滚动歌词、原生无损音频直链、专属艺术合辑与跑马灯封面动画。",
-        "zh-Hant": "YouTube Music Lua Gateway 外掛，支援毫秒級精準時序滾動歌詞、原生無損音訊直鏈、專屬藝術合輯與跑馬燈封面動畫。",
-        "ja": "YouTube Music の Lua Gateway プラグイン。ミリ秒単位の同期歌詞、高音質ストリーミング、Mixart アートカバー、動的モザイクアニメに対応。",
-        "en": "A Lua gateway plugin for YouTube Music featuring millisecond-accurate timed lyrics, direct audio streaming, Mixart cover art, and animated mosaics."
+        "zh-CN": "YouTube Music Lua Gateway 插件，支持毫秒级精准时序滚动歌词、原生无损音频直链、专属艺术合辑与喜欢歌单多阶分页。",
+        "zh-Hant": "YouTube Music Lua Gateway 外掛，支援毫秒級精準時序滾動歌詞、原生無損音訊直鏈、專屬藝術合輯與喜歡歌單多階分頁。",
+        "ja": "YouTube Music の Lua Gateway プラグイン。ミリ秒単位の同期歌詞、高音質ストリーミング、Mixart アートカバー、お気に入り複数ページに対応。",
+        "en": "A Lua gateway plugin for YouTube Music featuring millisecond-accurate timed lyrics, direct audio streaming, Mixart cover art, and full liked playlist pagination."
       },
       "author": "VincentZyu",
       "authorUrl": "https://github.com/VincentZyu233",
       "type": "open-source",
-      "version": "0.1.8",
+      "version": "0.1.15",
       "license": "MIT",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-youtube",
-      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.youtube/0.1.8/lazer.youtube.zip",
-      "sha256": "646c6091162ee85518190cd3fdd7ce43216db2d395b31f0e2a1fac77070abdd6",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.youtube/0.1.15/lazer.youtube.zip",
+      "sha256": "38ceb06ad2e483a7a9ffb8b072e86845a504796984de4c8d52413d346ca10254",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "youtube", "ytm", "lua"],
       "minAppVersion": "2.0.0",
-      "updatedAt": "2026-11-13"
+      "updatedAt": "2026-11-14"
     }
   ]
 }
