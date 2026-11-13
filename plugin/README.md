@@ -140,6 +140,12 @@ Lazer 正在把通用 UI 抽象为声明式主题和页面布局。当前内置�
 对应文字层级，宿主会限幅并映射到可用字重。皮肤操作失败只会回退到内置 Apple 主题，
 不会阻止音乐平台启动。
 
+歌词组件也使用同一组令牌：`lyricWeight`、`lyricTranslationWeight`、字号倍率、行高、
+翻译间距、焦点透明度和 `lyricTextAlign` 都可由 Lua 改写。滚动同样开放给主题：
+`lyricSpringMassScale`、`lyricSpringStiffnessScale`、`lyricSpringDampingScale` 控制弹簧，
+`lyricStaggerDelay`、`lyricStaggerDecay` 控制逐行错峰，`lyricFocusScaleDelta` 控制焦点行与
+非焦点行的缩放差。歌词的时序、滚动边界、命中测试和无障碍节点仍由客户端控制。
+
 ## 完整示例
 
 ```json
