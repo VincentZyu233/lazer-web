@@ -63,19 +63,19 @@
         "en": "YouTube Music"
       },
       "summary": {
-        "zh-CN": "YouTube Music Lua Gateway 插件，支持毫秒级精准时序滚动歌词、原生无损音频直链、专属艺术合辑与喜欢歌单多阶分页。",
-        "zh-Hant": "YouTube Music Lua Gateway 外掛，支援毫秒級精準時序滾動歌詞、原生無損音訊直鏈、專屬藝術合輯與喜歡歌單多階分頁。",
-        "ja": "YouTube Music の Lua Gateway プラグイン。ミリ秒単位の同期歌詞、高音質ストリーミング、Mixart アートカバー、お気に入り複数ページに対応。",
-        "en": "A Lua gateway plugin for YouTube Music featuring millisecond-accurate timed lyrics, direct audio streaming, Mixart cover art, and full liked playlist pagination."
+        "zh-CN": "YouTube Music Lua Gateway 插件，支持手机扫码直接授权登录、毫秒级精准时序滚动歌词、原生无损音频直链、专属艺术合辑与喜欢歌单多阶分页。",
+        "zh-Hant": "YouTube Music Lua Gateway 外掛，支援手機掃碼直接授權登入、毫秒級精準時序滾動歌詞、原生無損音訊直鏈、專屬藝術合輯與喜歡歌單多階分頁。",
+        "ja": "YouTube Music の Lua Gateway プラグイン。QRコード認証ログイン、ミリ秒単位の同期歌詞、高音質ストリーミング、Mixart アートカバーに対応。",
+        "en": "A Lua gateway plugin for YouTube Music featuring native QR code OAuth login, millisecond-accurate timed lyrics, direct audio streaming, Mixart cover art, and liked playlist pagination."
       },
       "author": "VincentZyu",
       "authorUrl": "https://github.com/VincentZyu233",
       "type": "open-source",
-      "version": "0.1.15",
+      "version": "0.2.0",
       "license": "MIT",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-youtube",
-      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.youtube/0.1.15/lazer.youtube.zip",
-      "sha256": "38ceb06ad2e483a7a9ffb8b072e86845a504796984de4c8d52413d346ca10254",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.youtube/0.2.0/lazer.youtube.zip",
+      "sha256": "0e895e682dc98a862ff284cad8c18fba3350c522d8f1d06786aac18cf5816add",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "youtube", "ytm", "lua"],
       "minAppVersion": "2.0.0",
