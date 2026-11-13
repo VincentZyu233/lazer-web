@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-13T03:20:00+08:00",
+  "updatedAt": "2026-11-13T21:45:00+08:00",
   "plugins": [
     {
       "id": "lazer.netease",
@@ -44,15 +44,15 @@
       "author": "VincentZyu",
       "authorUrl": "https://github.com/VincentZyu233",
       "type": "open-source",
-      "version": "0.1.0",
+      "version": "0.1.3",
       "license": "MIT",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-kugou",
-      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.kugou/0.1.0/lazer.kugou.zip",
-      "sha256": "75d91e77e217d7a51eb02f8cd876d67f2b182ddd57a361ffddc7c88c45492fc3",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.kugou/0.1.3/lazer.kugou.zip",
+      "sha256": "125f2f72c1e1c66027c82bd979247e87ff2822c21698fad50d3751e80e012396",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "kugou", "lua"],
       "minAppVersion": "2.0.0",
-      "updatedAt": "2026-11-12"
+      "updatedAt": "2026-11-13"
     }
   ]
 }
