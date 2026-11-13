@@ -134,6 +134,12 @@ Lazer 正在把通用 UI 抽象为声明式主题和页面布局。当前内置�
 输入或权限。未知字段会被忽略，数值会由客户端限制在安全范围内。该接口尚未开放，插件
 应继续使用当前的 `capabilities` 和音乐平台操作声明功能。
 
+客户端开放后，插件可以在 `describe` 顶层返回 `theme = true`，再由 `theme` 操作返回
+`{ theme = { id, name, elements = { ... } }, layout = { id, name, ... } }`。其中
+`displayWeight`、`headingWeight`、`titleWeight`、`bodyWeight` 和 `labelWeight` 可覆盖
+对应文字层级，宿主会限幅并映射到可用字重。皮肤操作失败只会回退到内置 Apple 主题，
+不会阻止音乐平台启动。
+
 ## 完整示例
 
 ```json
