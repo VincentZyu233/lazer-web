@@ -97,6 +97,59 @@ ZIP 会随 PR 一起提交，不需要额外部署文件服务器。开源和闭
 | `minAppVersion` | 否 | 最低 Lazer 版本 |
 | `updatedAt` | 是 | 版本发布日期 `YYYY-MM-DD` |
 
+## 客户端首页能力
+
+插件包中的 `manifest.json` 以及运行时 `describe.providers[*]` 可以声明
+`capabilities`。客户端会按当前平台实际声明的能力决定首页要请求和展示哪些内容，
+不会因为接口存在就强行显示一个空的模块。
+
+默认首页只保留两类内容：榜单和最近播放。最近播放由客户端本地维护，不需要插件实现。
+榜单来自客户端的外部榜单；如果插件声明了 `charts`，还会额外读取插件提供的榜单。
+
+首页扩展模块与能力的对应关系如下：
+
+| 能力 | 首页可展示的内容 | 需要实现的操作 |
+| --- | --- | --- |
+| `homeFeed` | 每日推荐、精选、新发行和编辑精选 | `homeFeed` |
+| `recommendations` | 猜你喜欢以及基于推荐歌曲的首页快捷入口 | `recommendations` |
+| `radio` | 私人漫游、心动模式和歌手电台 | `radio`；心动模式还需要可用的喜欢歌单 |
+| `charts` | 插件榜单（与客户端外部榜单合并） | `charts`、`playlistSongs` |
+
+能力可以只声明实际支持的部分。例如只实现搜索和歌词的插件，首页不会出现推荐、
+心动模式或电台入口；实现 `homeFeed` 但不实现 `radio` 的插件，也不会显示电台模块。
+如果 `describe` 返回了 `capabilities`，它会覆盖清单中的同名字段，因此平台可以按账号或
+地区返回不同的首页能力。能力名不区分大小写和短横线、下划线等分隔符。
+
+首页数据接口返回空数组也是合法的。插件应在不支持某个模块时省略对应能力，避免客户端
+重复请求不存在的接口；客户端会继续显示最近播放和可用的榜单。
+
+### 皮肤与布局接口（预留）
+
+Lazer 正在把通用 UI 抽象为声明式主题和页面布局。当前内置主题为 `builtin.apple`，
+内置布局为 `builtin.adaptive` 和 `builtin.television`。后续 Lua 皮肤会提供 JSON 形状的
+主题令牌（例如卡片圆角、列表行高、标题字号和玻璃模糊强度）以及布局令牌（例如页面边距、
+内容最大宽度和断点）。
+
+皮肤只提供数据，不返回 Flutter Widget、不执行任意 UI 代码，也不能接管焦点、语义树、
+输入或权限。未知字段会被忽略，数值会由客户端限制在安全范围内。插件仍应同时声明当前的
+`capabilities` 和音乐平台操作。
+
+插件可以在 `describe` 顶层返回 `theme = true`，再由 `theme` 操作返回
+`{ theme = { id, name, elements = { ... } }, layout = { id, name, ... } }`。其中
+`displayWeight`、`headingWeight`、`titleWeight`、`bodyWeight` 和 `labelWeight` 可覆盖
+对应文字层级，宿主会限幅并映射到可用字重。皮肤操作失败只会回退到内置 Apple 主题，
+不会阻止音乐平台启动。
+
+插件清单可以额外声明 `permissions.websocket` 域名列表。WebSocket 连接必须由用户在
+插件管理中单独授权；Lua 侧使用 `host.websocket({operation, id, url, data})` 打开、发送、
+接收和关闭连接。未获授权时运行时不会建立连接。
+
+歌词组件也使用同一组令牌：`lyricWeight`、`lyricTranslationWeight`、字号倍率、行高、
+翻译间距、焦点透明度和 `lyricTextAlign` 都可由 Lua 改写。滚动同样开放给主题：
+`lyricSpringMassScale`、`lyricSpringStiffnessScale`、`lyricSpringDampingScale` 控制弹簧，
+`lyricStaggerDelay`、`lyricStaggerDecay` 控制逐行错峰，`lyricFocusScaleDelta` 控制焦点行与
+非焦点行的缩放差。歌词的时序、滚动边界、命中测试和无障碍节点仍由客户端控制。
+
 ## 完整示例
 
 ```json
