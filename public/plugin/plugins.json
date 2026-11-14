@@ -75,7 +75,7 @@
       "license": "MIT",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-youtube",
       "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.youtube/0.2.5/lazer.youtube.zip",
-      "sha256": "dfd72769fee86972d44c3d399d1cd586397f7b709948aae7244db0ec6300dac6",
+      "sha256": "e53292adbf2ccd4b45ff059f06df706cb8971cc94c6151ac6693f7ffeaedc6ec",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "youtube", "ytm", "lua"],
       "minAppVersion": "2.0.0",
