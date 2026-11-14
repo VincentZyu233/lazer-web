@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-13T21:45:00+08:00",
+  "updatedAt": "2026-11-14T21:20:00+08:00",
   "plugins": [
     {
       "id": "lazer.netease",
@@ -53,6 +53,33 @@
       "tags": ["gateway", "kugou", "lua"],
       "minAppVersion": "2.0.0",
       "updatedAt": "2026-11-13"
+    },
+    {
+      "id": "lazer.youtube",
+      "name": {
+        "zh-CN": "YouTube Music",
+        "zh-Hant": "YouTube Music",
+        "ja": "YouTube Music",
+        "en": "YouTube Music"
+      },
+      "summary": {
+        "zh-CN": "YouTube Music Lua Gateway 插件，支持手机扫码授权登录、Cookie 导入、毫秒级时序滚动歌词、高品质音频直链与喜欢歌单分页。",
+        "zh-Hant": "YouTube Music Lua Gateway 外掛，支援手機掃碼授權登入、Cookie 匯入、毫秒級時序滾動歌詞、高品質音訊直鏈與喜歡歌單分頁。",
+        "ja": "YouTube Music の Lua Gateway プラグイン。QRコード／Cookie ログイン、ミリ秒単位の同期歌詞、高音質ストリーミング、お気に入りプレイリストのページングに対応。",
+        "en": "A Lua gateway plugin for YouTube Music with QR code and cookie sign-in, millisecond-accurate timed lyrics, high-quality audio streaming, and liked-playlist pagination."
+      },
+      "author": "VincentZyu",
+      "authorUrl": "https://github.com/VincentZyu233",
+      "type": "open-source",
+      "version": "0.2.5",
+      "license": "MIT",
+      "repo": "https://github.com/VincentZyu233/lazer-plugin-youtube",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.youtube/0.2.5/lazer.youtube.zip",
+      "sha256": "dfd72769fee86972d44c3d399d1cd586397f7b709948aae7244db0ec6300dac6",
+      "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
+      "tags": ["gateway", "youtube", "ytm", "lua"],
+      "minAppVersion": "2.0.0",
+      "updatedAt": "2026-11-14"
     }
   ]
 }
