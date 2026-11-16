@@ -71,15 +71,15 @@
       "author": "VincentZyu",
       "authorUrl": "https://github.com/VincentZyu233",
       "type": "open-source",
-      "version": "0.2.6",
+      "version": "0.2.7",
       "license": "MIT",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-youtube",
-      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.youtube/0.2.6/lazer.youtube.zip",
-      "sha256": "1713085c103e0f1172b8f10066967018cbbe8a430660461f2315f700045f3679",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.youtube/0.2.7/lazer.youtube.zip",
+      "sha256": "5877295ee602c448bd4ad143a2cd77f6be5bf0efcdcf32a4e216b668594a6ad3",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "youtube", "ytm", "lua"],
       "minAppVersion": "2.0.0",
-      "updatedAt": "2026-11-15"
+      "updatedAt": "2026-11-16"
     },
     {
       "id": "lazer.ws.bridge",
