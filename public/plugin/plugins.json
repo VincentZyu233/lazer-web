@@ -98,15 +98,15 @@
       "author": "VincentZyuLive",
       "authorUrl": "https://github.com/VincentZyuLive",
       "type": "open-source",
-      "version": "0.1.0",
+      "version": "0.1.3",
       "license": "MIT",
       "repo": "https://github.com/VincentZyuLive/lazer-plugin-ws-server-bridge",
-      "download": "https://lazer.naominet.dev/plugin/VincentZyuLive/lazer.ws.bridge/0.1.0/lazer.ws.bridge.zip",
-      "sha256": "76f5157bcbcb7b0c8f1c3fb60c93e3ecc04028e85da159eec3f37a5b47902e14",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyuLive/lazer.ws.bridge/0.1.3/lazer.ws.bridge.zip",
+      "sha256": "ea500d17c85c3248e5815844fa2c984514f4583f9e5f786e97672fa1f8d4f778",
       "platforms": ["windows", "macos", "linux", "android"],
       "tags": ["websocket", "splayer", "obs", "bridge", "lua"],
       "minAppVersion": "2.0.0",
-      "updatedAt": "2026-11-16"
+      "updatedAt": "2026-11-17"
     }
   ]
 }
