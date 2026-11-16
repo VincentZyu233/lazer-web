@@ -36,23 +36,23 @@
         "en": "Kugou Music"
       },
       "summary": {
-        "zh-CN": "酷狗音乐 Lua Gateway 插件，支持动感逐字歌词 (KRC)、双语翻译、歌曲评论区、高品质播放、自建与推荐歌单、私人电台与登录。",
-        "zh-Hant": "酷狗音樂 Lua Gateway 外掛，支援動感逐字歌詞 (KRC)、雙語翻譯、歌曲評論區、高音質播放、自建與推薦歌單、私人電台與登入。",
-        "ja": "Kugou Music の Lua Gateway プラグイン。動感歌詞 (KRC)、バイリンガル翻訳、楽曲コメント、高音質再生、プレイリスト、おすすめラジオ、ログインに対応。",
-        "en": "A Lua gateway plugin for Kugou Music with word-by-word lyrics (KRC), bilingual translation, song comments, HD streaming, custom and cloud playlists, radio, and sign-in."
+        "zh-CN": "酷狗音乐 Lua Gateway 插件，支持动感逐字歌词 (KRC)、双语翻译与罗马音音译、歌曲评论区、高品质播放、自建与推荐歌单、私人电台与登录。",
+        "zh-Hant": "酷狗音樂 Lua Gateway 外掛，支援動感逐字歌詞 (KRC)、雙語翻譯與羅馬音音譯、歌曲評論區、高音質播放、自建與推薦歌單、私人電台與登入。",
+        "ja": "Kugou Music の Lua Gateway プラグイン。動感歌詞 (KRC)、バイリンガル翻訳とローマ字音訳、楽曲コメント、高音質再生、プレイリスト、おすすめラジオ、ログインに対応。",
+        "en": "A Lua gateway plugin for Kugou Music with word-by-word lyrics (KRC), bilingual translation and romanization, song comments, HD streaming, custom and cloud playlists, radio, and sign-in."
       },
       "author": "VincentZyu",
       "authorUrl": "https://github.com/VincentZyu233",
       "type": "open-source",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "license": "MIT",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-kugou",
-      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.kugou/0.2.0/lazer.kugou.zip",
-      "sha256": "0dc816dfae4c2b3f8bb87a2c3f81d0d8e23e138b88afed21cbbc8de47950c13e",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.kugou/0.2.1/lazer.kugou.zip",
+      "sha256": "aecb2d41ab8f20d60afb8512eb350c981846b9938f0d1517102180181949c471",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "kugou", "lua"],
       "minAppVersion": "2.0.0",
-      "updatedAt": "2026-11-15"
+      "updatedAt": "2026-11-17"
     },
     {
       "id": "lazer.youtube",
