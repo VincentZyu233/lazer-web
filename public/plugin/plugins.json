@@ -82,27 +82,27 @@
       "updatedAt": "2026-11-15"
     },
     {
-      "id": "splayer-next-compatible-ws-server-bridge",
+      "id": "lazer.ws.bridge",
       "name": {
-        "zh-CN": "用于Lua 的 splayer-next 兼容协议格式的 ws服务端桥接lua插件",
-        "zh-Hant": "用於Lua 的 splayer-next 相容通訊協定格式的 ws伺服端橋接lua外掛",
-        "ja": "SPlayer-Next 互換 WebSocket サーバーブリッジ (Lua)",
-        "en": "SPlayer-Next Compatible WebSocket Server Bridge for Lua"
+        "zh-CN": "WebSocket 外部服务端桥接 (兼容 SPlayer-Next 协议)",
+        "zh-Hant": "WebSocket 外部伺服端橋接 (相容 SPlayer-Next 通訊協定)",
+        "ja": "WebSocket 外部サーバーブリッジ (SPlayer-Next 互換)",
+        "en": "WebSocket External Server Bridge (SPlayer-Next Compatible)"
       },
       "summary": {
-        "zh-CN": "为 OBS 挂件与外部工具提供兼容 SPlayer-Next 格式的 WebSocket 广播与控制服务 (ws://127.0.0.1:14558/ws)。",
-        "zh-Hant": "為 OBS 懸浮窗與外部工具提供相容 SPlayer-Next 格式的 WebSocket 廣播與控制服務 (ws://127.0.0.1:14558/ws)。",
+        "zh-CN": "专为 OBS 网页挂件与外部工具打造的 WebSocket 广播与控制服务，原生兼容 SPlayer-Next 外部 API 规范 (ws://127.0.0.1:14558/ws)。",
+        "zh-Hant": "專為 OBS 網頁懸浮窗與外部工具打造的 WebSocket 廣播與控制服務，原生相容 SPlayer-Next 外部 API 規範 (ws://127.0.0.1:14558/ws)。",
         "ja": "OBS オーバーレイや外部ツール向けに SPlayer-Next 互換の WebSocket 配信・制御サービスを提供 (ws://127.0.0.1:14558/ws)。",
         "en": "Provides SPlayer-Next compatible WebSocket broadcasting and player control for OBS overlay widgets and external tools (ws://127.0.0.1:14558/ws)."
       },
-      "author": "VincentZyu",
-      "authorUrl": "https://github.com/VincentZyu233",
+      "author": "VincentZyuLive",
+      "authorUrl": "https://github.com/VincentZyuLive",
       "type": "open-source",
       "version": "0.1.0",
       "license": "MIT",
-      "repo": "https://github.com/VincentZyu233/splayer-next-compatible-ws-server-bridge",
-      "download": "https://lazer.naominet.dev/plugin/VincentZyu/splayer-next-compatible-ws-server-bridge/0.1.0/splayer-next-compatible-ws-server-bridge.zip",
-      "sha256": "61d2a51a7ede08172f8e5d7e090abd8dddfdd93704566afb90b60acd437f7713",
+      "repo": "https://github.com/VincentZyuLive/lazer-plugin-ws-server-bridge",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyuLive/lazer.ws.bridge/0.1.0/lazer.ws.bridge.zip",
+      "sha256": "800a0af557bcdfa2dac0e70d70487210e06f424d53ae73c3d736bb1d1bc07e7c",
       "platforms": ["windows", "macos", "linux", "android"],
       "tags": ["websocket", "splayer", "obs", "bridge", "lua"],
       "minAppVersion": "2.0.0",
