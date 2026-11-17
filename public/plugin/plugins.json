@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-15T21:12:29+08:00",
+  "updatedAt": "2026-11-17T18:20:00+08:00",
   "plugins": [
     {
       "id": "lazer.netease",
@@ -11,21 +11,21 @@
         "en": "NetEase Cloud Music"
       },
       "summary": {
-        "zh-CN": "网易云音乐 Lua Gateway，支持登录、搜索、歌单、歌词、音频流、播放统计以及首页编辑精选和新发行。",
+        "zh-CN": "网易云音乐 Lua Gateway，支持登录、搜索、歌单、歌词、音频流、播放统计、一起听与播放活动同步，以及首页编辑精选和新发行。",
         "zh-Hant": "網易雲音樂 Lua Gateway，支援登入、搜尋、歌單、歌詞、音訊串流、播放統計，以及首頁編輯精選與新發行。",
         "ja": "NetEase Cloud Music の Lua Gateway。ログイン、検索、プレイリスト、歌詞、音声ストリーミング、再生統計、ホームの編集おすすめと新譜に対応。",
-        "en": "A Lua gateway for NetEase Cloud Music with sign-in, search, playlists, lyrics, audio streaming, play stats, editorial picks, and new releases."
+        "en": "A Lua gateway for NetEase Cloud Music with sign-in, search, playlists, lyrics, audio streaming, play stats, listen-together rooms, and new releases."
       },
       "author": "Illusion",
       "type": "closed-source",
-      "version": "1.3.4",
+      "version": "1.3.5",
       "license": "Private",
-      "download": "https://lazer.naominet.dev/plugin/Illusion/lazer.netease/1.3.4/lazer.netease.zip",
-      "sha256": "e5f04d29ff87c689c013668958fa65196ce5b7ca4001589bd5235a72539da295",
+      "download": "https://lazer.naominet.dev/plugin/Illusion/lazer.netease/1.3.5/lazer.netease.zip",
+      "sha256": "3346bff4f917e3759a45afcd05b021735d1ae8e60a3a64cca54bb67fe337c4ab",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "netease", "lua"],
       "minAppVersion": "2.0.0",
-      "updatedAt": "2026-11-15"
+      "updatedAt": "2026-11-17"
     },
     {
       "id": "lazer.kugou",
