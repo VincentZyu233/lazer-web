@@ -35,6 +35,10 @@ Use the language menu in the header. The selection is saved in `localStorage`, r
 
 All translations live in `assets/js/i18n.js`. Chinese source strings stay in `index.html`, and the runtime layer swaps them using the dictionaries in that file.
 
+## Community
+
+Join the QQ group **Take lazer** (群号 `1137280545`) via [点击链接加入群聊【Take lazer】](https://qm.qq.com/q/FR8H7OzrCQ).
+
 ## Plugin market
 
 `/plugin` is the plugin marketplace page. Lazer clients read `/plugin/plugins.json` as the market manifest; the same manifest powers the page's search, type filters, and plugin cards. Listings are PR-based — open-source plugins must include a public repository link, while closed-source plugins must submit a PR for every release. See [`plugin/README.md`](plugin/README.md) for the listing rules and field reference.
@@ -87,4 +91,4 @@ assets/
   js/plugin-i18n.js
 ```
 
-No raster CD artwork is shipped. All external links point to the public Lazer repository, releases, issues, license, and the community QQ group.
+No raster CD artwork is shipped. All external links point to the public Lazer repository, releases, issues, license, and the community QQ group **Take lazer** (`1137280545`) — [点击链接加入群聊【Take lazer】](https://qm.qq.com/q/FR8H7OzrCQ).

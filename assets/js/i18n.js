@@ -123,7 +123,7 @@ const TRANSLATIONS = {
     '前往 Releases': '前往 Releases',
     '查看构建产物': '查看建置產物',
     '预发布版。产物由 GitHub Actions 构建，文件名统一为': '預發佈版。產物由 GitHub Actions 建置，檔名統一為',
-    '点击链接加入群聊【神秘交流群】': '點擊連結加入群聊【神秘交流群】',
+    '点击链接加入群聊【Take lazer】': '點擊連結加入群聊【Take lazer】',
     '反馈一个问题': '回報一個問題',
     '听歌': '聽歌',
     '文档 ↗': '文件 ↗',
@@ -238,7 +238,7 @@ const TRANSLATIONS = {
     '前往 Releases': 'Releases へ',
     '查看构建产物': 'ビルド成果物',
     '预发布版。产物由 GitHub Actions 构建，文件名统一为': 'プレリリース版。成果物は GitHub Actions でビルドされ、ファイル名はすべて',
-    '点击链接加入群聊【神秘交流群】': 'クリックしてグループチャット「神秘交流群」に参加',
+    '点击链接加入群聊【Take lazer】': 'クリックしてグループチャット「Take lazer」に参加',
     '反馈一个问题': '問題を報告',
     '听歌': '聴く',
     '文档 ↗': 'ドキュメント ↗',
@@ -355,7 +355,7 @@ const TRANSLATIONS = {
     '查看构建产物': 'View build artifacts',
     '预发布版。产物由 GitHub Actions 构建，文件名统一为': 'Pre-release. Artifacts are built by GitHub Actions, all named',
     '。': '.',
-    '点击链接加入群聊【神秘交流群】': 'Click to join the group chat [Mystery Chat Group]',
+    '点击链接加入群聊【Take lazer】': 'Click to join the group chat [Take lazer]',
     '反馈一个问题': 'Report an issue',
     '听歌': 'Listen',
     '文档 ↗': 'Docs ↗',
@@ -382,21 +382,21 @@ const ATTRIBUTE_TRANSLATIONS = {
     'Lazer 首页': 'Lazer 首頁',
     '主导航': '主導覽',
     'CD 折射主视觉': 'CD 折射主視覺',
-    '点击链接加入群聊【神秘交流群】': '點擊連結加入群聊【神秘交流群】',
+    '点击链接加入群聊【Take lazer】': '點擊連結加入群聊【Take lazer】',
     '回到顶部': '回到頂部'
   },
   ja: {
     'Lazer 首页': 'Lazer ホーム',
     '主导航': 'メインナビゲーション',
     'CD 折射主视觉': 'CD リフラクションのメインビジュアル',
-    '点击链接加入群聊【神秘交流群】': 'クリックしてグループチャット「神秘交流群」に参加',
+    '点击链接加入群聊【Take lazer】': 'クリックしてグループチャット「Take lazer」に参加',
     '回到顶部': 'トップへ戻る'
   },
   en: {
     'Lazer 首页': 'Lazer home',
     '主导航': 'Main navigation',
     'CD 折射主视觉': 'CD refraction key visual',
-    '点击链接加入群聊【神秘交流群】': 'Click to join the group chat [Mystery Chat Group]',
+    '点击链接加入群聊【Take lazer】': 'Click to join the group chat [Take lazer]',
     '回到顶部': 'Back to top'
   }
 };
