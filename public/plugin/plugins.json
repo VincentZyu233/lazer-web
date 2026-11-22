@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-22T16:00:00+08:00",
+  "updatedAt": "2026-11-23T05:25:00+08:00",
   "plugins": [
     {
       "id": "lazer.netease",
@@ -71,15 +71,15 @@
       "author": "VincentZyu",
       "authorUrl": "https://github.com/VincentZyu233",
       "type": "open-source",
-      "version": "0.2.7",
+      "version": "0.2.8",
       "license": "MIT",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-youtube",
-      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.youtube/0.2.7/lazer.youtube.zip",
-      "sha256": "5877295ee602c448bd4ad143a2cd77f6be5bf0efcdcf32a4e216b668594a6ad3",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyu/lazer.youtube/0.2.8/lazer.youtube.zip",
+      "sha256": "d478b795d7c4e311de4a6bf5ab1e7d195745da91ca6222021ddc7dfbae283660",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "youtube", "ytm", "lua"],
       "minAppVersion": "2.0.0",
-      "updatedAt": "2026-11-16"
+      "updatedAt": "2026-11-23"
     },
     {
       "id": "lazer.ws.bridge",
