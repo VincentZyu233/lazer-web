@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Lazer 插件市场：客户端读取 /plugin/plugins.json，把社区制作的歌词、主题、音频与联动插件接进播放器。">
+  <meta name="description" content="Lazer 插件市场：客户端读取 /plugin/plugins.json，把社区做的歌词、主题、音频与联动插件接进播放器。">
   <meta name="theme-color" content="#090909">
   <meta name="color-scheme" content="dark">
   <meta property="og:title" content="Lazer — 插件市场">
-  <meta property="og:description" content="Lazer 插件市场：客户端读取 /plugin/plugins.json，把社区制作的歌词、主题、音频与联动插件接进播放器。">
+  <meta property="og:description" content="Lazer 插件市场：客户端读取 /plugin/plugins.json，把社区做的歌词、主题、音频与联动插件接进播放器。">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="zh_CN">
   <title>Lazer — 插件市场</title>
@@ -72,7 +72,7 @@
             </h1>
 
             <p class="market-lede" data-i18n="heroLede">
-              Lazer 插件市场。客户端直接读取 /plugin/plugins.json，把社区制作的歌词、主题、音频与联动插件，接进同一台播放器。
+              Lazer 插件市场。客户端直接读取 /plugin/plugins.json，把社区做的歌词、主题、音频和联动插件接进同一台播放器。
             </p>
 
             <div class="hero-actions market-hero-actions">
@@ -227,10 +227,10 @@
         <div class="section-title-row market-title-row">
           <h2 id="market-title">
             <span data-i18n="marketTitleA">给播放器，</span><br>
-            <span data-i18n="marketTitleB">加一点别的。</span>
+            <span data-i18n="marketTitleB">再接几个功能。</span>
           </h2>
           <p data-i18n="marketDesc">
-            所有上架插件都来自一次合并的 Pull Request。开源或闭源，都能在这里找到自己的位置。
+            上架的插件都来自合并过的 Pull Request。开源插件要带公开仓库，闭源插件每次发版都提一次 PR。
           </p>
         </div>
 
@@ -298,10 +298,10 @@
           <div class="guide-copy">
             <h2 id="guide-title">
               <span data-i18n="guideTitleA">上架，</span><br>
-              <span data-i18n="guideTitleB">只要一个 PR。</span>
+              <span data-i18n="guideTitleB">就一个 PR。</span>
             </h2>
             <p data-i18n="guideDesc">
-              插件市场不开放自动提交。Fork 仓库，编辑 public/plugin/plugins.json，用上架模板发一个 Pull Request；合并之后，客户端就会读到你的插件。
+              市场没有自动提交入口。Fork 仓库，改 public/plugin/plugins.json，按上架模板发一个 Pull Request；合并之后客户端就能读到你的插件。
             </p>
             <div class="guide-actions">
               <a class="button button-dark" href="https://github.com/chuxuehaocai/lazer-web/blob/main/plugin/README.md" target="_blank" rel="noreferrer">
@@ -344,26 +344,26 @@
           <article class="rule">
             <span class="rule-index">01</span>
             <h3 data-i18n="rule1Title">开源插件</h3>
-            <p data-i18n="rule1Body">必须带上公开可访问的开源仓库链接与许可证。客户端可直接从仓库的 Releases 获取更新，不需要为每个版本重复提交。</p>
+            <p data-i18n="rule1Body">必须带公开可访问的仓库链接和许可证。客户端可以直接从仓库的 Releases 取更新，不用为每个版本重复提交。</p>
             <span class="rule-tag">REPO REQUIRED</span>
           </article>
           <article class="rule">
             <span class="rule-index">02</span>
             <h3 data-i18n="rule2Title">闭源插件</h3>
-            <p data-i18n="rule2Body">可以不带仓库链接，但作者必须在每一次更新时提交 PR，修改 plugins.json 里的版本、下载地址与校验值。</p>
+            <p data-i18n="rule2Body">可以不带仓库链接，但每次更新都要提 PR，改 plugins.json 里的版本号、下载地址和校验值。</p>
             <span class="rule-tag">PR EVERY RELEASE</span>
           </article>
           <article class="rule">
             <span class="rule-index">03</span>
             <h3 data-i18n="rule3Title">审核上架</h3>
-            <p data-i18n="rule3Body">维护者会检查字段完整性、许可证与下载地址。合并后的 main 分支会由 Vercel 自动构建，/plugin/plugins.json 随即生效。</p>
+            <p data-i18n="rule3Body">维护者会看字段是否完整、许可证和下载地址。合并后 main 由 Vercel 自动构建，/plugin/plugins.json 随即生效。</p>
             <span class="rule-tag">MERGED = LIVE</span>
           </article>
         </div>
 
         <div class="package-strip">
           <span class="package-strip-label" data-i18n="packageLabel">可选 / ZIP 托管</span>
-          <p data-i18n="packageDesc">作者可以选择把插件 ZIP 上传到插件市场：将 ZIP 放进 public/plugin/&lt;作者&gt;/&lt;插件 id&gt;/&lt;版本&gt;/，download 填市场地址即可。</p>
+          <p data-i18n="packageDesc">作者也可以把插件 ZIP 上传到市场：放进 public/plugin/&lt;作者&gt;/&lt;插件 id&gt;/&lt;版本&gt;/，download 填市场地址就行。</p>
           <code>public/plugin/&lt;author&gt;/&lt;plugin-id&gt;/&lt;version&gt;/&lt;plugin-id&gt;.zip</code>
         </div>
 

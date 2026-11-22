@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Lazer 是一台用 Flutter 手写的多平台音乐客户端，通过 Lua 插件接入不同音乐平台。真实曲库、逐字歌词、评论与播放，共用一套核心。">
+  <meta name="description" content="Lazer 是用 Flutter 手写的多平台音乐客户端，平台能力由 Lua 插件提供，搜索、歌单、评论、歌词与播放共用一套核心。">
   <meta name="theme-color" content="#090909">
   <meta name="color-scheme" content="dark">
   <meta property="og:title" content="Lazer — 把每一首歌，放回盒子里">
-  <meta property="og:description" content="Lazer 是一台用 Flutter 手写的多平台音乐客户端，通过 Lua 插件接入不同音乐平台。真实曲库、逐字歌词、评论与播放，共用一套核心。">
+  <meta property="og:description" content="Lazer 是用 Flutter 手写的多平台音乐客户端，平台能力由 Lua 插件提供，搜索、歌单、评论、歌词与播放共用一套核心。">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="zh_CN">
   <title>Lazer — 把每一首歌，放回盒子里</title>
@@ -76,8 +76,8 @@
           </div>
 
           <p class="hero-lede">
-            Lazer 是一台用 Flutter 手写的音乐客户端。通过 Lua 插件接入不同平台，
-            真实曲库、逐字歌词、评论与播放，共用一套核心。
+            Lazer 是拿 Flutter 手写出来的音乐客户端。接哪个平台由 Lua 插件决定，
+            搜索、歌单、评论、歌词和播放共用同一套核心。
           </p>
 
           <div class="hero-actions">
@@ -214,8 +214,8 @@
           <div class="statement-main">
             <h2 id="statement-title">一台播放器。<br><span>平台，<br class="mobile-break">交给插件。</span></h2>
             <p>
-              Lazer 已经从一个单平台客户端，长成通过 Lua 插件接入多个平台的播放器。
-              平台能力交给插件，播放、歌词、界面与状态共用同一套核心。
+              Lazer 最早只接一个平台。现在平台这部分整个交给 Lua 插件，
+              播放、歌词、界面和状态仍然是同一套代码。
             </p>
           </div>
 
@@ -266,10 +266,10 @@
         </div>
 
         <div class="section-title-row">
-          <h2 id="listen-title">所有需要的，<br>都在播放链路里。</h2>
+          <h2 id="listen-title">搜索、评论、切歌，<br>都在同一条链路上。</h2>
           <p>
-            从第一下搜索，到最后一秒缓存。Lazer 不替你决定听什么，
-            只把每一次寻找、播放和停留，做得足够顺手。
+            Lazer 不替你决定听什么。它只负责把从找到这首歌到声音出来这一段路跑顺，
+            不绕弯，也不掉拍。
           </p>
         </div>
 
@@ -277,31 +277,31 @@
           <article class="track">
             <span class="track-no">A1</span>
             <h3>真实曲库</h3>
-            <p>搜索、推荐歌单、私人雷达与每日推荐。账号、收藏与播放列表，都落在真实服务上。</p>
+            <p>搜索、推荐歌单、私人雷达和每日推荐都有。账号、收藏和播放列表，都存在服务本身。</p>
             <span class="track-tag">PLUGIN</span>
           </article>
           <article class="track">
             <span class="track-no">A2</span>
             <h3>深入唱片</h3>
-            <p>歌手主页带热门歌曲与分页专辑；专辑详情有简介和完整曲目，点名字就继续往下走。</p>
+            <p>歌手主页有热门歌曲和分页专辑；专辑详情有简介和完整曲目，点名字继续往下翻。</p>
             <span class="track-tag">CATALOG</span>
           </article>
           <article class="track">
             <span class="track-no">A3</span>
             <h3>评论现场</h3>
-            <p>热门与最新评论、分页加载、点赞与取消点赞。游客可以看，想说话就登录。</p>
+            <p>热门和最新评论都能翻页，可以点赞也可以取消。不登录能看，想发言再登录。</p>
             <span class="track-tag">COMMENTS</span>
           </article>
           <article class="track">
             <span class="track-no">A4</span>
-            <h3>每个系统都认识它</h3>
-            <p>Windows、macOS、Linux、Android 与 iOS 系统媒体控件；通知、锁屏与灵动岛跟着唱到哪一句。</p>
+            <h3>系统媒体控件</h3>
+            <p>Windows、macOS、Linux、Android 和 iOS 都接进了系统媒体控件；通知、锁屏和灵动岛跟着当前播放位置走。</p>
             <span class="track-tag">MEDIA</span>
           </article>
           <article class="track">
             <span class="track-no">A5</span>
-            <h3>先把开头留住</h3>
-            <p>没缓存的歌先攒够十秒再开口；已下载和已缓存的歌照旧秒开。切歌不再从半拍开始。</p>
+            <h3>先缓冲，再出声</h3>
+            <p>没缓存的歌先缓冲十秒再开始；已下载和已缓存的照旧秒开。切歌不会再从半拍起头。</p>
             <span class="track-tag">BUFFER</span>
           </article>
         </div>
@@ -322,16 +322,16 @@
 
         <div class="lyrics-grid">
           <div class="lyrics-copy">
-            <h2 id="lyrics-title">歌词，<br><span>不是字幕。</span></h2>
+            <h2 id="lyrics-title">歌词，<br><span>逐字对齐。</span></h2>
             <p class="lyrics-lede">
-              该亮的那一句留在焦点里。其他字退到后面，不抢拍、不迷路。
-              手动翻过歌词，它会自己回到音乐身边。
+              只有正在唱的那一行亮着，其他行往后退。
+              手翻走之后，它会自己跟回正在播放的位置。
             </p>
 
             <ol class="feature-list">
               <li>
                 <span>01</span>
-                <div><h3>逐字弹簧</h3><p>LRC / YRC 解析，逐字强调，让字跟着声音的弹性走。</p></div>
+                <div><h3>逐字弹簧</h3><p>解析 LRC 与 YRC，逐字强调，字跟着声音弹。</p></div>
               </li>
               <li>
                 <span>02</span>
@@ -379,10 +379,10 @@
         </div>
 
         <div class="section-title-row interface-title-row">
-          <h2 id="interface-title">一套页面，<br>换一种姿势。</h2>
+          <h2 id="interface-title">一套页面，<br>换个摆法。</h2>
           <p>
-            桌面、手机、车机与大屏共享同一套页面与状态。
-            不是四份互相追赶的界面，而是同一张唱片，换一个摆放方式。
+            桌面、手机、车机和大屏用的是同一套页面和同一份状态，
+            只是布局尺度不一样。
           </p>
         </div>
 
@@ -390,25 +390,25 @@
           <article class="posture">
             <span class="posture-index">01</span>
             <h3>桌面</h3>
-            <p>侧边栏、完整播放条、可调的 80–175% DPI。窗口多大，布局都保持清醒。</p>
+            <p>侧边栏、完整播放条，DPI 可在 80–175% 之间调。窗口怎么拉，布局都不会乱。</p>
             <span class="posture-tag">SIDEBAR / TRANSPORT</span>
           </article>
           <article class="posture">
             <span class="posture-index">02</span>
             <h3>手机</h3>
-            <p>底部标签栏与迷你播放器，沉浸式正在播放页。单手也能够到每个动作。</p>
+            <p>底部标签栏和迷你播放器，播放页沉浸显示。单手够得到每个操作。</p>
             <span class="posture-tag">TAB BAR / MINI PLAYER</span>
           </article>
           <article class="posture">
             <span class="posture-index">03</span>
             <h3>车机</h3>
-            <p>进入即放大到 135%，触控目标更宽。路况之外，只留下必要的操作。</p>
+            <p>进入后自动放大到 135%，触控目标更宽。路上只看必要的操作。</p>
             <span class="posture-tag">135% SCALE / TOUCH</span>
           </article>
           <article class="posture">
             <span class="posture-index">04</span>
             <h3>大屏</h3>
-            <p>电视与投影自动进入大屏模式。方向键按位置移动，焦点永远看得见。</p>
+            <p>电视和投影自动切到大屏模式。方向键按位置移动，焦点看得见。</p>
             <span class="posture-tag">TV / D-PAD</span>
           </article>
         </div>
@@ -436,7 +436,7 @@
         <div class="spec-grid">
           <div class="spec-intro">
             <h2 id="spec-title">看不见的地方，<br>也算数。</h2>
-            <p>不是堆参数，是把每个会影响听感的细节，单独放到台面上。</p>
+            <p>这一版跑在哪些平台、用了什么参数，都写在下面。</p>
           </div>
 
           <dl class="spec-list">
@@ -462,10 +462,10 @@
 
         <div class="download-grid">
           <div class="download-copy">
-            <h2 id="download-title">把它带回<br>你的桌面。</h2>
+            <h2 id="download-title">下载<br>Lazer。</h2>
             <p>
-              预发布版本已准备好。选择你的平台，从 GitHub Releases 获取构建产物；
-              需要自行编译时，仓库里也有完整的构建说明。
+              预发布版本可以下载了。选好平台去 GitHub Releases 拿构建产物；
+              想自己编译，仓库里有完整的构建步骤。
             </p>
             <div class="download-actions">
               <a class="button button-dark" href="https://github.com/chuxuehaocai/Lazer/releases" target="_blank" rel="noreferrer">
