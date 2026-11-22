@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-17T18:20:00+08:00",
+  "updatedAt": "2026-11-22T16:00:00+08:00",
   "plugins": [
     {
       "id": "lazer.netease",
@@ -107,6 +107,33 @@
       "tags": ["websocket", "splayer", "obs", "bridge", "lua"],
       "minAppVersion": "2.0.0",
       "updatedAt": "2026-11-17"
+    },
+    {
+      "id": "community.bilibili.music",
+      "name": {
+        "zh-CN": "哔哩哔哩",
+        "zh-Hant": "嗶哩嗶哩",
+        "ja": "ビリビリ",
+        "en": "Bilibili"
+      },
+      "summary": {
+        "zh-CN": "把 B 站当作曲库的 Lua Gateway：扫码 / Cookie 登录、WBI 签名搜索、音质自选播放、视频 AI 字幕同步歌词、收藏夹、排行榜与评论区。",
+        "zh-Hant": "把 B 站當作曲庫的 Lua Gateway：掃碼 / Cookie 登入、WBI 簽名搜尋、音質自選播放、影片 AI 字幕同步歌詞、收藏夾、排行榜與留言區。",
+        "ja": "Bilibili を音楽ライブラリとして使う Lua Gateway。QR／Cookie ログイン、WBI 署名検索、音質選択ストリーミング、動画 AI 字幕による同期歌詞、お気に入り、ランキング、コメントに対応。",
+        "en": "A Lua gateway that turns Bilibili into a music library, with QR and cookie sign-in, WBI-signed search, selectable audio quality, lyrics from the video's own AI subtitles, favorites, charts, and comments."
+      },
+      "author": "YG",
+      "authorUrl": "https://github.com/kumthor",
+      "type": "open-source",
+      "version": "0.4.2",
+      "license": "MIT",
+      "repo": "https://github.com/kumthor/lazer-plugin-bilibili",
+      "download": "https://github.com/kumthor/lazer-plugin-bilibili/releases/latest/download/community.bilibili.music.zip",
+      "sha256": "f9907528323c517351b457f141f2ecf3a35d2aa8e097efe735b2a3eb3f7f5e81",
+      "platforms": ["windows", "macos", "linux", "android", "ios"],
+      "tags": ["gateway", "bilibili", "lua", "lyrics", "streaming"],
+      "minAppVersion": "2.0.210",
+      "updatedAt": "2026-11-22"
     }
   ]
 }
