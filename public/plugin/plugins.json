@@ -98,15 +98,15 @@
       "author": "VincentZyuLive",
       "authorUrl": "https://github.com/VincentZyuLive",
       "type": "open-source",
-      "version": "0.1.3",
+      "version": "0.2.0",
       "license": "MIT",
       "repo": "https://github.com/VincentZyuLive/lazer-plugin-ws-server-bridge",
-      "download": "https://lazer.naominet.dev/plugin/VincentZyuLive/lazer.ws.bridge/0.1.3/lazer.ws.bridge.zip",
-      "sha256": "ea500d17c85c3248e5815844fa2c984514f4583f9e5f786e97672fa1f8d4f778",
+      "download": "https://lazer.naominet.dev/plugin/VincentZyuLive/lazer.ws.bridge/0.2.0/lazer.ws.bridge.zip",
+      "sha256": "1dcd828715ae4871b15404ec58aa48654bb2d861973bff182e4e2ee39309fb9a",
       "platforms": ["windows", "macos", "linux", "android"],
       "tags": ["websocket", "splayer", "obs", "bridge", "lua"],
-      "minAppVersion": "2.0.0",
-      "updatedAt": "2026-11-17"
+      "minAppVersion": "2.1.0",
+      "updatedAt": "2026-11-23"
     },
     {
       "id": "community.bilibili.music",
