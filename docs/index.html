@@ -3116,18 +3116,20 @@ npm run check:plugins -- --remote</code></pre>
 
         <div class="card-grid">
           <article class="card">
-            <span class="card-index">01 / FRONTEND</span>
-            <h3>独立 HTML 前端</h3>
+            <span class="card-index">01 / GATEWAY</span>
+            <h3>离线音乐网关</h3>
             <p>
-              完整的 HTML/CSS/JS 页面加 Lua WebSocket 桥，支持播放控制、队列、歌词、歌单、搜索与统计。
-              直接用浏览器打开本地文件就能连原生后端，不需要 WebView 或 npm。
+              把 <code>describe</code>、密码登录、搜索、首页、歌单、歌词、电台和榜单全实现一遍，
+              播放地址指向本机 <code>127.0.0.1</code> 上的 Range HTTP 服务，音源是现合成的 WAV，
+              全程不联网。
             </p>
           </article>
           <article class="card">
-            <span class="card-index">02 / NATIVE</span>
-            <h3>原生诊断页</h3>
+            <span class="card-index">02 / THEME</span>
+            <h3>声明式主题</h3>
             <p>
-              按需触发的音频诊断与歌词按钮，不注册轮询计时器，权限在首次用户操作时才申请，可以直接拿它当原生接入的参考。
+              只用 <code>describe</code> 加 <code>theme</code> 两个操作，交一组字号、字重、圆角与
+              歌词动效令牌，不返回任何 Widget，也没有网络、存储和文件权限。
             </p>
           </article>
           <article class="card">
@@ -3141,8 +3143,9 @@ npm run check:plugins -- --remote</code></pre>
         </div>
 
         <p class="docs-prose">
-          示例代码在客户端仓库的 <code>examples/</code> 目录下：
-          <code>lua-frontend</code> 与 <code>lua-native-diagnostics</code>。
+          示例代码在客户端仓库的 <code>examples/</code> 目录下：<code>gateway-mock</code> 与
+          <code>theme-plugin</code>。跑 <code>build.bat</code>（Windows）或
+          <code>./build.sh</code>（macOS / Linux）就能打出可以直接导入的 ZIP。
         </p>
       </section>
 
