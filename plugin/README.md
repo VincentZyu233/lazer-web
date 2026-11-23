@@ -38,8 +38,10 @@ Vite 会把 `public/plugin` 下的 `plugins.json` 和托管 ZIP 原样发布到 
 
 - 必须提供公开可访问的 `repo`（开源仓库链接）。
 - 必须填写 `license`（例如 `MIT`、`GPL-3.0-or-later`）。
-- 建议 `download` 指向仓库的 latest release 资源，例如：
-  `https://github.com/OWNER/REPO/releases/latest/download/PLUGIN.zip`
+- `download` 必须指向内容不会变的东西：打了版本号的 release 资源，或者托管到本市场。
+  例如 `https://github.com/OWNER/REPO/releases/download/v1.0.0/PLUGIN.zip`。
+  不要用 `releases/latest/download/...`：客户端会校验 `sha256` 和包内 `manifest.json` 的 `version`，
+  上游一发新版本，清单里的两个值立刻失配，用户侧看到的就是「插件校验失败」，插件装不上。
 - 开源仓库的新版本可以直接发布 Release，不必每次更新都改市场清单；只有名称、简介、下载方式等元数据变化时才需要提交 PR。
 
 ### 闭源插件
@@ -170,13 +172,24 @@ Lazer 正在把通用 UI 抽象为声明式主题和页面布局。当前内置�
   "version": "1.4.2",
   "license": "MIT",
   "repo": "https://github.com/OWNER/lyric-plus",
-  "download": "https://github.com/OWNER/lyric-plus/releases/latest/download/lyric-plus.zip",
+  "download": "https://github.com/OWNER/lyric-plus/releases/download/v1.4.2/lyric-plus.zip",
   "platforms": ["windows", "macos", "linux"],
   "tags": ["lyrics", "overlay"],
   "minAppVersion": "2.0.0",
   "updatedAt": "2026-10-18"
 }
 ```
+
+## 发布前校验
+
+清单直接决定用户能不能装上插件。改完 `plugins.json` 先跑：
+
+```powershell
+npm run check:plugins               # 字段、市场托管 ZIP 是否存在、sha256 是否对得上
+npm run check:plugins -- --remote   # 额外把外部 download 抓下来对一遍哈希
+```
+
+`npm run build` 会先跑这个校验，清单写错时构建直接失败，坏条目不会被发布出去。
 
 ## 本地预览
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T05:25:00+08:00",
+  "updatedAt": "2026-11-23T16:00:00+08:00",
   "plugins": [
     {
       "id": "lazer.netease",
@@ -125,15 +125,15 @@
       "author": "YG",
       "authorUrl": "https://github.com/kumthor",
       "type": "open-source",
-      "version": "0.4.2",
+      "version": "0.4.3",
       "license": "MIT",
       "repo": "https://github.com/kumthor/lazer-plugin-bilibili",
-      "download": "https://github.com/kumthor/lazer-plugin-bilibili/releases/latest/download/community.bilibili.music.zip",
-      "sha256": "f9907528323c517351b457f141f2ecf3a35d2aa8e097efe735b2a3eb3f7f5e81",
+      "download": "https://lazer.naominet.dev/plugin/YG/community.bilibili.music/0.4.3/community.bilibili.music.zip",
+      "sha256": "fe5b2a112bab49c39353bbb4d5f67392ea747b71574f53fc01c7cb11f91f3163",
       "platforms": ["windows", "macos", "linux", "android", "ios"],
       "tags": ["gateway", "bilibili", "lua", "lyrics", "streaming"],
       "minAppVersion": "2.0.210",
-      "updatedAt": "2026-11-22"
+      "updatedAt": "2026-11-23"
     }
   ]
 }
