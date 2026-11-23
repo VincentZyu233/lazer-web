@@ -2,6 +2,8 @@
 
 Static official site for Lazer, built with Vite and deployed on Vercel. No framework runtime dependency.
 
+Writing a plugin? The reference is **[lazer.naominet.dev/docs](https://lazer.naominet.dev/docs)** — that page is built from this repository.
+
 ## Preview
 
 ```powershell
@@ -41,7 +43,30 @@ Join the QQ group **Take lazer** (群号 `1137280545`) via [点击链接加入�
 
 ## Plugin market
 
-`/plugin` is the plugin marketplace page. Lazer clients read `/plugin/plugins.json` as the market manifest; the same manifest powers the page's search, type filters, and plugin cards. Listings are PR-based — open-source plugins must include a public repository link, while closed-source plugins must submit a PR for every release. See [`plugin/README.md`](plugin/README.md) for the listing rules and field reference.
+`/plugin` is the plugin marketplace page. Lazer clients read `/plugin/plugins.json` as the market manifest; the same manifest powers the page's search, type filters, and plugin cards. Listings are PR-based — open-source plugins must include a public repository link, while closed-source plugins must submit a PR for every release. See [`plugin/README.md`](plugin/README.md) for the listing rules and field reference; the plugin contract itself is documented at [`/docs`](https://lazer.naominet.dev/docs).
+
+## Plugin developer documentation
+
+`/docs` — live at **[lazer.naominet.dev/docs](https://lazer.naominet.dev/docs)** — is the Lua plugin development reference: ZIP layout and manifest fields, the `call()` contract, the full music-provider operation list, the `host.*` API, the declarative UI surface, the permission model, and the marketplace release flow.
+
+```text
+docs/index.html        # /docs page (cleanUrls)
+assets/css/docs.css    # docs-only layout: sticky table of contents, tables, code blocks
+assets/js/docs.js      # scroll position, table-of-contents filter, copy buttons
+```
+
+`vite.config.js` lists `docs/index.html` as a build input, so the page is emitted as `dist/docs/index.html`. Vercel's `cleanUrls` then serves it at `/docs` and `/docs/` — the same rule that makes `plugin.html` the `/plugin` page. The page is Chinese-only on purpose: it documents a Chinese-first client and every identifier, field name, and payload in it is language-neutral.
+
+`npm run dev` keeps the same URLs. Two settings in `vite.config.js` do that, and both exist because of how the dev server differs from Vercel:
+
+- `appType: 'mpa'` — the site is a set of static pages, so an unknown path should 404 instead of silently rendering `index.html` (the default SPA fallback is what made `/docs` show the homepage).
+- the `cleanDocsUrl` plugin — Vite's HTML fallback resolves `/plugin` to `plugin.html` on its own, but it cannot resolve `/docs` to a directory index, so that path is rewritten to `/docs/index.html` before the fallbacks run.
+
+The sidebar links, the `#anchor` ids, and the section list are hand-maintained. Three details are easy to break when editing:
+
+- Every `<section class="docs-section" id="…">` needs a matching entry in `<nav class="docs-nav">`; a link to a missing id silently does nothing.
+- Copy buttons are injected from `.code-block[data-lang]` at runtime, so a new code block only needs `<div class="code-block" data-lang="lua"><pre><code>…</code></pre></div>`.
+- Literal `<`, `>`, and `&` inside `<pre>` must be escaped (`&lt;`, `&gt;`, `&amp;`). Vite's HTML parser fails the build with `invalid-first-character-of-tag-name` otherwise.
 
 ## Vercel deployment
 
@@ -72,6 +97,8 @@ The artwork lives in the `<aside class="hero-art hero-art-cd" data-slot="hero-ar
 ```text
 index.html
 plugin.html
+docs/
+  index.html
 vite.config.js
 package.json
 vercel.json
@@ -83,12 +110,14 @@ public/
 assets/
   css/site.css
   css/plugin.css
+  css/docs.css
   fonts/MiSans-{Regular,Semibold,Bold}.woff2
   images/favicon.png
   images/mark-ivory.png
   js/i18n.js
   js/plugin.js
   js/plugin-i18n.js
+  js/docs.js
 ```
 
 No raster CD artwork is shipped. All external links point to the public Lazer repository, releases, issues, license, and the community QQ group **Take lazer** (`1137280545`) — [点击链接加入群聊【Take lazer】](https://qm.qq.com/q/FR8H7OzrCQ).

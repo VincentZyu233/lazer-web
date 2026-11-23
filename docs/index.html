@@ -1,0 +1,3319 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lazer Lua 插件开发文档：插件包结构、清单字段、音乐平台契约、host 宿主能力、界面扩展、权限模型与上架流程。">
+  <meta name="theme-color" content="#090909">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:title" content="Lazer — Lua 插件开发文档">
+  <meta property="og:description" content="从 manifest.json 到上架：把任意音乐服务接进 Lazer 播放器的完整契约。">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="zh_CN">
+  <title>Lazer — Lua 插件开发文档</title>
+  <link rel="canonical" href="https://lazer.naominet.dev/docs">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/docs.css">
+</head>
+<body id="top" class="docs-page">
+  <a class="skip-link" href="#main">跳到正文</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="/" aria-label="Lazer 首页">
+        <img class="brand-mark" src="/assets/images/mark-ivory.png" width="26" height="26" alt="">
+        <span class="brand-word">LAZER</span>
+        <span class="brand-sub">/ DOCS</span>
+      </a>
+
+      <nav class="main-nav" aria-label="主导航">
+        <a href="/"><span>00</span><span>主页</span></a>
+        <a href="/plugin"><span>01</span><span>插件市场</span></a>
+        <a href="/docs" aria-current="page"><span>02</span><span>开发文档</span></a>
+        <a href="#examples"><span>03</span><span>示例</span></a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="github-link" href="https://github.com/chuxuehaocai/lazer-web" target="_blank" rel="noreferrer">
+          GitHub
+          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 10 10 2M4 2h6v6"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="docs-shell">
+    <aside class="docs-rail">
+      <button class="docs-rail-toggle" type="button" data-rail-toggle aria-expanded="false" aria-controls="docs-rail-body">
+        <span>目录 / CONTENTS</span>
+        <span data-rail-state>展开</span>
+      </button>
+
+      <div class="docs-rail-inner">
+        <div class="docs-rail-body" id="docs-rail-body" data-rail-body>
+          <label class="docs-filter">
+            <span class="docs-filter-icon" aria-hidden="true">⌕</span>
+            <input type="search" placeholder="过滤目录" aria-label="过滤目录" autocomplete="off" data-docs-filter>
+            <kbd>/</kbd>
+          </label>
+
+          <nav class="docs-nav" aria-label="文档目录">
+            <div class="docs-nav-group">
+              <span class="docs-nav-label">01 / 开始</span>
+              <ol>
+                <li><a href="#overview">插件能做什么</a></li>
+                <li><a href="#package">插件包结构</a></li>
+                <li><a href="#manifest">清单字段</a></li>
+                <li><a href="#quickstart">第一个插件</a></li>
+                <li><a href="#local">安装与调试</a></li>
+              </ol>
+            </div>
+
+            <div class="docs-nav-group">
+              <span class="docs-nav-label">02 / 运行时</span>
+              <ol>
+                <li><a href="#entry">入口与 call 契约</a></li>
+                <li><a href="#lifecycle">生命周期</a></li>
+                <li><a href="#sandbox">Lua 沙箱</a></li>
+                <li><a href="#errors">错误与超时</a></li>
+              </ol>
+            </div>
+
+            <div class="docs-nav-group">
+              <span class="docs-nav-label">03 / 音乐平台</span>
+              <ol>
+                <li><a href="#describe">describe</a></li>
+                <li><a href="#auth">登录与会话</a></li>
+                <li><a href="#catalog">检索与详情</a></li>
+                <li><a href="#playlists">歌单与收藏</a></li>
+                <li><a href="#playback">播放与上报</a></li>
+                <li><a href="#lyrics">歌词</a></li>
+                <li><a href="#extras">扩展能力</a></li>
+                <li><a href="#models">数据模型</a></li>
+                <li><a href="#error-codes">错误码与重试</a></li>
+              </ol>
+            </div>
+
+            <div class="docs-nav-group">
+              <span class="docs-nav-label">04 / host 能力</span>
+              <ol>
+                <li><a href="#http">网络请求</a></li>
+                <li><a href="#crypto">加密与编码</a></li>
+                <li><a href="#utils">工具函数</a></li>
+                <li><a href="#storage">持久化存储</a></li>
+                <li><a href="#files">文件沙箱</a></li>
+                <li><a href="#resources">包内资源</a></li>
+                <li><a href="#timer">计时器</a></li>
+                <li><a href="#player">播放器控制</a></li>
+                <li><a href="#data-access">资料库与账号</a></li>
+                <li><a href="#data-native">原生能力</a></li>
+                <li><a href="#connections">连接与服务端</a></li>
+              </ol>
+            </div>
+
+            <div class="docs-nav-group">
+              <span class="docs-nav-label">05 / 界面</span>
+              <ol>
+                <li><a href="#settings">设置项</a></li>
+                <li><a href="#menu">播放器菜单</a></li>
+                <li><a href="#pages">插件页面</a></li>
+                <li><a href="#layout">页面几何与编辑</a></li>
+                <li><a href="#theme">主题与布局令牌</a></li>
+                <li><a href="#events">事件回调</a></li>
+              </ol>
+            </div>
+
+            <div class="docs-nav-group">
+              <span class="docs-nav-label">06 / 权限</span>
+              <ol>
+                <li><a href="#permissions">权限清单</a></li>
+                <li><a href="#grants">授权与撤销</a></li>
+              </ol>
+            </div>
+
+            <div class="docs-nav-group">
+              <span class="docs-nav-label">07 / 发布</span>
+              <ol>
+                <li><a href="#market">上架市场</a></li>
+                <li><a href="#release">发版流程</a></li>
+              </ol>
+            </div>
+
+            <div class="docs-nav-group">
+              <span class="docs-nav-label">08 / 参考</span>
+              <ol>
+                <li><a href="#examples">官方示例</a></li>
+                <li><a href="#compat">兼容性</a></li>
+                <li><a href="#faq">常见问题</a></li>
+              </ol>
+            </div>
+
+            <p class="docs-nav-empty">没有匹配的条目</p>
+          </nav>
+
+          <div class="docs-rail-foot">
+            API <code>v1</code><br>
+            清单 <code>schemaVersion 1</code><br>
+            市场 <code>/plugin/plugins.json</code>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main id="main" class="docs-main">
+      <div class="docs-hero">
+        <p class="docs-eyebrow">
+          <span class="docs-eyebrow-code">LZR / LUA PLUGIN</span>
+          <span class="docs-eyebrow-rule"></span>
+          <span>MANIFEST · SANDBOX · HOST API</span>
+        </p>
+
+        <h1>
+          <span>给播放器写一个</span>
+          <span class="is-muted">Lua 插件。</span>
+        </h1>
+
+        <p class="docs-lede">
+          Lazer 不带内置的流媒体网关。音乐平台用什么接口、怎么签名、返回的 JSON 怎么解析、
+          账号规则怎么定，都写在插件的 Lua 里；客户端只负责显示和播放。
+        </p>
+
+        <dl class="docs-meta">
+          <div class="docs-meta-item">
+            <dt>插件 API</dt>
+            <dd><code>apiVersion = 1</code></dd>
+          </div>
+          <div class="docs-meta-item">
+            <dt>运行时</dt>
+            <dd>Lua · 独立沙箱</dd>
+          </div>
+          <div class="docs-meta-item">
+            <dt>平台</dt>
+            <dd>桌面 · 移动 · Web</dd>
+          </div>
+          <div class="docs-meta-item">
+            <dt>市场</dt>
+            <dd><code>lazer.naominet.dev</code></dd>
+          </div>
+        </dl>
+      </div>
+
+      <section class="docs-section" id="overview">
+        <div class="docs-section-head">
+          <b>01</b>
+          <span>开始 / OVERVIEW</span>
+          <span>LZR / DOCS</span>
+        </div>
+
+        <h2>插件能做什么</h2>
+
+        <p class="docs-intro">
+          插件就是一个 ZIP。解压后真正起作用的文件有两类：清单说明它需要什么，Lua 说明它做什么。
+          客户端不执行包里的 JavaScript，也不会把 Flutter Widget 交给 Lua，
+          能做的事都得经过 <code>host</code> 提供的接口。
+        </p>
+
+        <div class="card-grid">
+          <article class="card">
+            <span class="card-index">01 / PROVIDER</span>
+            <h3>接入一个音乐平台</h3>
+            <p>
+              搜索、专辑、歌单、播放地址、歌词、播放上报、一起听。实现 <code>describe</code>
+              和用得到的操作，平台就会出现在「添加平台」里，界面跟内置平台一样。
+            </p>
+          </article>
+          <article class="card">
+            <span class="card-index">02 / HOST</span>
+            <h3>调用宿主能力</h3>
+            <p>
+              <code>host.http</code> 按清单里的白名单发请求，<code>host.crypto</code> 负责签名，
+              <code>host.storage_*</code> 存会话。也可以开 TCP 或 WebSocket 连接，
+              甚至在本机监听端口，给外部前端用。
+            </p>
+          </article>
+          <article class="card">
+            <span class="card-index">03 / UI</span>
+            <h3>扩展界面</h3>
+            <p>
+              可以加设置项、插件页面、正在播放页的菜单项，也能提供主题和布局规则。
+              控件都由宿主绘制，插件只交数据。
+            </p>
+          </article>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">边界</span>
+          <p>
+            插件拿不到 Dart 对象、Flutter Widget、宿主的文件路径、进程和动态库，
+            也读不到别的插件的数据。这一点没法用配置放开：
+            Lua 里能看见的只有 <code>host</code> 和你自己返回的 table。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="package">
+        <div class="docs-section-head">
+          <b>02</b>
+          <span>开始 / PACKAGE</span>
+          <span>ZIP LAYOUT</span>
+        </div>
+
+        <h2>插件包结构</h2>
+
+        <p class="docs-intro">
+          插件以 ZIP 形式安装。<code>manifest.json</code> 必须放在 ZIP 根目录，
+          <code>entry</code> 指向的 Lua 文件也要在包里。其余 Lua 文件用 <code>require</code> 加载。
+        </p>
+
+        <div class="code-block" data-lang="text">
+          <pre><code>my-plugin.zip
+├── manifest.json      # 必需，唯一的清单来源
+├── main.lua           # 必需，entry 指向它
+├── api.lua            # 可选，require("api") 加载
+├── sign.lua           # 可选，require("sign")
+├── data/keys.json     # 可选，host.resource("data/keys.json") 读取
+├── frontend/          # 可选，随包携带的只读 HTML/CSS/JS
+│   └── index.html
+├── README.md          # 可选
+└── LICENSE            # 可选</code></pre>
+        </div>
+
+        <h3 class="docs-h3" id="package-limits">体积与文件限制</h3>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>限制</th><th>数值</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>ZIP 大小</td><td class="is-num">16 MB</td><td>超过直接拒绝安装</td></tr>
+              <tr><td>解压后总量</td><td class="is-num">8 MB</td><td>所有文件累计</td></tr>
+              <tr><td>单文件</td><td class="is-num">2 MB</td><td>任意一个文件</td></tr>
+              <tr><td>文件个数</td><td class="is-num">256</td><td>压缩包内有效条目</td></tr>
+              <tr><td>路径长度</td><td class="is-num">200</td><td>相对路径字符数</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          允许的文件类型只有：<code>manifest.json</code>、<code>*.lua</code>、
+          <code>.json</code> / <code>.md</code> / <code>.txt</code> / <code>.html</code> / <code>.css</code> / <code>.js</code> / <code>.svg</code>
+          文本资源，以及根目录的 <code>LICENSE</code>。出现别的扩展名时整包拒绝，不会只装能认出来的那部分。
+        </p>
+
+        <h3 class="docs-h3" id="package-paths">路径规则</h3>
+
+        <p class="docs-prose">
+          所有路径必须是安全的相对路径：不含反斜杠、盘符或开头的 <code>/</code>，
+          不允许 <code>.</code> 与 <code>..</code> 段，不允许以点或空格结尾的段，
+          也不允许 <code>&lt; &gt; " | ? *</code> 与控制字符。路径按小写去重，所以
+          <code>Api.lua</code> 和 <code>api.lua</code> 属于冲突。
+        </p>
+
+        <p class="docs-prose">
+          打包工具留下的杂物直接忽略，不算错误：<code>__MACOSX/</code>、<code>.DS_Store</code>、<code>Thumbs.db</code>。
+          Windows 资源管理器写出的反斜杠路径会被规范化。打包时多裹了一层目录、
+          所有文件都在同一个顶层目录下的，客户端会把这一层提升为根。
+        </p>
+
+        <div class="docs-tip">
+          <span class="docs-note-label">提示</span>
+          <p>
+            自动提升只对「所有文件共用一个顶层目录」有效。ZIP 里既有 <code>my-plugin/manifest.json</code>
+            又有根目录的 <code>README.md</code> 时不会提升，安装会报「ZIP 根目录缺少 manifest.json」。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="manifest">
+        <div class="docs-section-head">
+          <b>03</b>
+          <span>开始 / MANIFEST</span>
+          <span>SCHEMA 1</span>
+        </div>
+
+        <h2>清单字段</h2>
+
+        <p class="docs-intro">
+          <code>manifest.json</code> 是插件唯一的声明来源，决定插件叫什么、入口在哪、能访问哪些网络、
+          在客户端里显示成什么样。字段不合法时整包被拒，而报错不会告诉你是哪个字段，
+          所以下面这些规则需要逐条对。
+        </p>
+
+        <dl class="field-list">
+          <div class="field is-required">
+            <dt>id <span>string</span></dt>
+            <dd>
+              插件唯一标识，<code>^[a-z][a-z0-9_.-]{2,79}$</code>：小写字母开头，3–80 位。
+              建议用反写域名，例如 <code>community.bilibili.music</code>。
+            </dd>
+          </div>
+          <div class="field is-required">
+            <dt>name <span>string</span></dt>
+            <dd>显示名称，非空且不超过 100 字符。</dd>
+          </div>
+          <div class="field is-required">
+            <dt>version <span>string</span></dt>
+            <dd>语义化版本，例如 <code>1.4.2</code> 或 <code>2.0.0-beta.1</code>。与市场清单里的 <code>version</code> 必须完全一致。</dd>
+          </div>
+          <div class="field is-required">
+            <dt>apiVersion <span>number</span></dt>
+            <dd>当前只接受 <code>1</code>。写成别的值（包括遗漏时的默认 <code>0</code>）一律拒绝。</dd>
+          </div>
+          <div class="field is-required">
+            <dt>provider <span>string</span></dt>
+            <dd>
+              <code>^[a-z][a-z0-9_-]{1,39}$</code>：小写字母开头，2–40 位，且不能是保留字 <code>local</code>。
+              运行时每次 <code>call</code> 都会把它放进 <code>args.platform</code>。
+            </dd>
+          </div>
+          <div class="field">
+            <dt>entry <span>string</span></dt>
+            <dd>入口 Lua 文件，默认 <code>main.lua</code>。必须是安全相对路径且以 <code>.lua</code> 结尾。</dd>
+          </div>
+          <div class="field">
+            <dt>description <span>string</span></dt>
+            <dd>一句话说明，显示在插件详情里。</dd>
+          </div>
+          <div class="field">
+            <dt>author <span>string</span></dt>
+            <dd>作者或团队名。</dd>
+          </div>
+          <div class="field">
+            <dt>capabilities <span>string[]</span></dt>
+            <dd>
+              声明这个插件实现了哪些能力。客户端据此决定首页模块、菜单入口和要不要广播播放事件。
+              名字不区分大小写与 <code>-</code> / <code>_</code>。
+            </dd>
+          </div>
+          <div class="field">
+            <dt>auth <span>string[]</span></dt>
+            <dd>登录方式：<code>qr</code>、<code>sms</code>、<code>password</code>、<code>cookie</code>。写了才会显示对应入口。</dd>
+          </div>
+          <div class="field">
+            <dt>permissions <span>object</span></dt>
+            <dd>权限声明，详见 <a href="#permissions">权限清单</a>。未声明的权限不会弹窗，也不会生效。</dd>
+          </div>
+        </dl>
+
+        <h3 class="docs-h3" id="manifest-example">完整示例</h3>
+
+        <div class="code-block" data-lang="json">
+          <pre><code>{
+  "id": "community.example.music",
+  "name": "Example Music",
+  "version": "1.0.0",
+  "description": "把 Example Music 接进 Lazer",
+  "author": "YOUR NAME",
+  "entry": "main.lua",
+  "apiVersion": 1,
+  "provider": "example",
+  "capabilities": ["search", "playlists", "lyrics", "scrobble", "player_events"],
+  "auth": ["qr", "cookie"],
+  "permissions": {
+    "network": ["api.example.com", "*.example-cdn.com"],
+    "storage": true,
+    "data": ["library", "profile"]
+  }
+}</code></pre>
+        </div>
+
+        <h3 class="docs-h3" id="manifest-network">网络规则语法</h3>
+
+        <p class="docs-prose">
+          <code>permissions.network</code> 是 HTTPS 主机的白名单，最多 32 条。每条是一个主机名，
+          可带端口，也可以用 <code>*.</code> 前缀通配子域。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>写法</th><th>允许</th><th>不允许</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>api.example.com</code></td><td>恰好这个主机</td><td>任何子域、任何其他主机</td></tr>
+              <tr><td><code>*.example.com</code></td><td><code>example.com</code> 及其所有子域</td><td><code>example.org</code></td></tr>
+              <tr><td><code>api.example.com:8443</code></td><td>同主机且端口为 8443</td><td>443 或其他端口</td></tr>
+              <tr><td><code>*.com</code></td><td colspan="2">拒绝安装：通配必须落在可注册域名上</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          通配符后面必须是一个可注册域名。客户端内置了一小张公共后缀表（<code>co.uk</code>、
+          <code>com.cn</code>、<code>co.jp</code> 等），把 <code>*.co.uk</code> 这类写法判为无效；
+          想覆盖国别域名下的子域，请写完整的 <code>*.example.co.uk</code>。
+          请求必须使用 HTTPS，且 URL 中不能带用户名或密码。
+        </p>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            <code>*.example.com</code> 额外允许裸域 <code>example.com</code> 本身。
+            端口不写时要求目标端口为默认 443；写了端口就要求精确相等。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="quickstart">
+        <div class="docs-section-head">
+          <b>04</b>
+          <span>开始 / QUICKSTART</span>
+          <span>HELLO, PROVIDER</span>
+        </div>
+
+        <h2>第一个插件</h2>
+
+        <p class="docs-intro">
+          最小的插件只需要一个入口文件和一个 <code>call</code> 函数。
+          下面这份能登录、能搜索、能取歌词，够出现在平台列表里了。
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>-- main.lua
+local api = require("api")
+
+return {
+  call = function(operation, args)
+    if operation == "describe" then
+      return { providers = {
+        { id = "example", name = "Example Music",
+          auth = { "cookie" },
+          capabilities = { "search", "lyrics" } },
+      } }
+    end
+
+    if operation == "session" then
+      local cookie = host.storage_get("cookie")
+      if not cookie then return nil end
+      return { id = "me", name = "Example User" }
+    end
+
+    if operation == "loginCookie" then
+      host.storage_set("cookie", args.cookie)
+      return { id = "me", name = "Example User" }
+    end
+
+    if operation == "search" then
+      return api.search(args.query, args.limit or 30, args.offset or 0)
+    end
+
+    if operation == "lyrics" then
+      return api.lyrics(args.id)
+    end
+
+    error("unsupported operation: " .. tostring(operation))
+  end,
+}</code></pre>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>-- api.lua
+local M = {}
+
+local BASE = "https://api.example.com"
+
+-- 参数既可以直接给查询串，也可以给 table；table 会被编码成 a=1&b=2
+local function encode(params)
+  if params == nil then return nil end
+  if type(params) == "string" then return params end
+  local parts = {}
+  for key, value in pairs(params) do
+    parts[#parts + 1] = host.url_encode(tostring(key))
+      .. "=" .. host.url_encode(tostring(value))
+  end
+  return table.concat(parts, "&")
+end
+
+-- host.http 返回 {status, headers, body}，状态码由插件自己解释
+local function send(method, path, query, payload)
+  local url = BASE .. path
+  local params = encode(query)
+  if params and params ~= "" then url = url .. "?" .. params end
+
+  local body, contentType = nil, nil
+  if type(payload) == "table" then
+    body, contentType = host.json_encode(payload), "application/json"
+  elseif type(payload) == "string" then
+    body, contentType = payload, "application/x-www-form-urlencoded"
+  end
+
+  local response = host.http({
+    url = url,
+    method = method,
+    headers = {
+      ["Cookie"] = host.storage_get("cookie") or "",
+      ["Content-Type"] = contentType or "application/json",
+    },
+    body = body,
+  })
+  if response.status ~= 200 then
+    return { error = { code = 40, httpStatus = response.status } }
+  end
+  return host.json_decode(response.body)
+end
+
+function M.get(path, query) return send("GET", path, query) end
+function M.post(path, payload) return send("POST", path, nil, payload) end
+
+function M.search(query, limit, offset)
+  local body = M.get("/search", { q = query, limit = limit, offset = offset })
+  if body.error then return body end
+
+  local songs = {}
+  for _, item in ipairs(body.songs or {}) do
+    songs[#songs + 1] = {
+      id = tostring(item.id),
+      title = item.name,
+      artists = { { id = tostring(item.artist.id), name = item.artist.name } },
+      albumId = tostring(item.album.id),
+      albumName = item.album.name,
+      coverUrl = item.album.picUrl,
+      durationMs = item.duration,
+    }
+  end
+  return { songs = songs }
+end
+
+function M.lyrics(id)
+  local body = M.get("/lyric", { id = id })
+  if body.error then return body end
+  -- 返回候选数组；客户端解析 LRC 后就得到时间轴
+  return { { synced = true, lrc = body.lrc } }
+end
+
+return M</code></pre>
+        </div>
+
+        <h3 class="docs-h3" id="quickstart-pack">打包</h3>
+
+        <p class="docs-prose">
+          把 <code>manifest.json</code>、<code>main.lua</code>、<code>api.lua</code> 放在同一个目录里压成 ZIP。
+          用 PowerShell 打包时别把父目录一起装进去，按文件逐个压：
+        </p>
+
+        <div class="code-block" data-lang="powershell">
+          <pre><code>Compress-Archive -Path .\manifest.json, .\main.lua, .\api.lua `
+  -DestinationPath .\community.example.music.zip -Force</code></pre>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">校验</span>
+          <p>
+            安装时客户端先把包解压到临时目录，校验清单和入口，再用一个临时 VM 跑一遍入口。
+            全部通过才替换旧版本；中途失败就保留原版本，正在用的插件不受影响。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="local">
+        <div class="docs-section-head">
+          <b>05</b>
+          <span>开始 / DEBUG</span>
+          <span>LOCAL LOOP</span>
+        </div>
+
+        <h2>安装与调试</h2>
+
+        <dl class="steps">
+          <li>
+            <h4>安装</h4>
+            <p>打开客户端的「设置 → 插件管理」，选择安装并挑中你的 ZIP。</p>
+          </li>
+          <li>
+            <h4>看启动结果</h4>
+            <p>
+              启动失败时只会显示「插件启动失败，请检查插件版本或重新导入」。
+              具体原因在 <code>host.log</code> 写出的诊断日志里，或者在开发者控制台的 Lua 输出里。
+            </p>
+          </li>
+          <li>
+            <h4>打印</h4>
+            <p>
+              用 <code>host.log("debug", "payload", { status = 200 })</code> 记结构化信息。
+              日志会经过脱敏并截断长度，别把 Cookie 或令牌写进去：被抹掉之后反而查不出问题。
+            </p>
+          </li>
+          <li>
+            <h4>迭代</h4>
+            <p>
+              改完重新打包，再装一次就覆盖了。更新会重置这个插件已获得的授权，
+              数据权限要重新同意一次，免得旧授权被新代码直接拿走。
+            </p>
+          </li>
+        </dl>
+
+        <h3 class="docs-h3" id="local-errors">常见启动错误</h3>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>现象</th><th>原因</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>ZIP 根目录缺少 manifest.json</td><td>压缩时多包了一层目录，且没有满足自动提升条件</td></tr>
+              <tr><td>清单无效</td><td>某个字段不满足规则：常见是 <code>apiVersion</code> 没写、<code>provider</code> 用了大写或在 <code>id</code> 里混入大写</td></tr>
+              <tr><td>缺少插件入口</td><td><code>entry</code> 指向的文件不在包里，或路径大小写与 ZIP 内不一致</td></tr>
+              <tr><td>插件仅支持 Lua 源码与说明文件</td><td>包里混入了 <code>.png</code>、<code>.exe</code> 等不被允许的类型</td></tr>
+              <tr><td>Entry must return a table</td><td>入口文件没有 <code>return { call = ... }</code>，或 <code>require</code> 失败</td></tr>
+              <tr><td>插件缺少 call 入口</td><td>入口返回的 table 里没有 <code>call</code> 字段</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="docs-section" id="entry">
+        <div class="docs-section-head">
+          <b>06</b>
+          <span>运行时 / ENTRY</span>
+          <span>CALL CONTRACT</span>
+        </div>
+
+        <h2>入口与 call 契约</h2>
+
+        <p class="docs-intro">
+          入口文件只执行一次，必须 <code>return</code> 一个 table，<code>call</code> 是其中唯一的入口函数。
+          此后宿主的所有调用都走它：平台操作、事件回调、计时器。
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>return {
+  call = function(operation, args)
+    -- operation: string
+    -- args: table（普通平台操作一定带平台 ID）
+    return nil
+  end,
+}</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>位置</th><th>内容</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>operation</code></td><td>操作名，字符串。大小写敏感，按文档写成驼峰或全小写。</td></tr>
+              <tr><td><code>args</code></td><td>
+                参数表。由客户端发起的调用会额外带上 <code>args.platform</code>（即清单里的
+                <code>provider</code>）；事件回调带各自的字段，见 <a href="#events">事件回调</a>。
+              </td></tr>
+              <tr><td>返回值</td><td>任意可跨边界的数据，见下方类型规则。返回 <code>nil</code> 表示「没有内容」，不是错误。</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="entry-types">可以跨边界的数据</h3>
+
+        <p class="docs-prose">
+          Lua 与宿主之间只能传 <code>nil</code>、布尔值、数字、字符串、数组和字符串键表。
+          函数、协程、userdata 跨边界会直接报错 <code>Only data can cross the plugin boundary</code>。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>规则</th><th>限制</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>嵌套深度</td><td class="is-num">48 层</td></tr>
+              <tr><td>单表键数</td><td class="is-num">100000</td></tr>
+              <tr><td>表的键类型</td><td>只能是字符串或整数；其它类型报 <code>Invalid table key</code></td></tr>
+              <tr><td>数组语义</td><td>整数键恰好覆盖 <code>1..n</code> 时按数组处理，否则按字符串键表处理</td></tr>
+              <tr><td>数字</td><td>整数保持整数，浮点保持浮点；<code>NaN</code> 与无穷不可传递</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            返回值里不要放函数或循环引用。序列化会失败，整次调用报错，
+            界面上只会说「插件请求失败」，你的错误信息到不了用户。
+          </p>
+        </div>
+
+        <h3 class="docs-h3" id="entry-dispatch">分发写法</h3>
+
+        <p class="docs-prose">
+          两三个操作用 <code>if</code> 就够了。多起来之后可以按表分发，少一层缩进，
+          未实现的操作也能一起兜住：
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>local handlers = {}
+handlers.describe = function(args) ... end
+handlers.search   = function(args) return search(args.query) end
+handlers.lyrics   = function(args) return lyrics(args.id) end
+
+return {
+  call = function(operation, args)
+    local handler = handlers[operation]
+    if not handler then
+      error("unsupported operation: " .. tostring(operation))
+    end
+    return handler(args or {})
+  end,
+}</code></pre>
+        </div>
+
+        <div class="docs-tip">
+          <span class="docs-note-label">提示</span>
+          <p>
+            未实现的操作直接 <code>error</code> 报出来，别静默返回 <code>nil</code>。
+            客户端解析失败只会说「插件返回了无效数据」，出错的位置只有你自己的错误信息能说明。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="lifecycle">
+        <div class="docs-section-head">
+          <b>07</b>
+          <span>运行时 / LIFECYCLE</span>
+          <span>INSTALL → LIVE</span>
+        </div>
+
+        <h2>生命周期</h2>
+
+        <p class="docs-intro">
+          从 ZIP 到能用，中间是串行的几步。任何一步失败，已经装好的旧版本都不受影响：
+          客户端只在临时目录里验证通过之后才替换。
+        </p>
+
+        <dl class="steps">
+          <li>
+            <h4>解包与校验</h4>
+            <p>
+              检查 ZIP 体积、文件类型、路径安全性、清单字段，并确认 <code>entry</code> 指向的文件存在。
+              这一步不执行任何 Lua。
+            </p>
+          </li>
+          <li>
+            <h4>临时 VM 启动</h4>
+            <p>
+              在隔离环境里加载入口、跑一遍 bootstrap。入口必须返回 table 且带 <code>call</code> 字段。
+              启动有 40 秒上限。
+            </p>
+          </li>
+          <li>
+            <h4>替换与注册</h4>
+            <p>
+              启动成功才替换旧版本。停用、更新或卸载前，客户端会先停掉该插件的请求和关联播放会话。
+            </p>
+          </li>
+          <li>
+            <h4>describe</h4>
+            <p>
+              插件启用后客户端调用 <code>describe</code>，据此得到平台列表、名称、登录方式与能力。
+              旧式单平台插件可以省略它，改用清单里的 <code>provider</code> / <code>capabilities</code> / <code>auth</code>。
+            </p>
+          </li>
+          <li>
+            <h4>注册扩展</h4>
+            <p>
+              设置项、插件页面、播放器菜单项在入口执行时注册。注册是幂等的：
+              同一个插件里用相同的 <code>id</code> 再注册一次，更新原项，不会多出一条。
+            </p>
+          </li>
+          <li>
+            <h4>会话与调用</h4>
+            <p>
+              <code>session</code> 返回已登录账号或 <code>nil</code>。之后每次搜索、取流、取歌词都是一次
+              <code>call</code>，同一个插件的调用串行执行。
+            </p>
+          </li>
+        </dl>
+
+        <h3 class="docs-h3" id="lifecycle-state">状态与持久化</h3>
+
+        <p class="docs-prose">
+          会话、设置值、文件沙箱都按插件和平台分开存放。多平台插件必须用
+          <code>args.platform</code> 区分凭据，不要用一个全局 Cookie 覆盖所有账号。
+          选择本地音乐不会触发 <code>logout</code>，切换平台也不会清空其他平台的会话。
+        </p>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            <code>logout</code> 只清除当前 <code>args.platform</code> 的凭据。要清空整个插件的数据，
+            用 <code>host.storage_clear()</code>，或让用户在插件管理里卸载。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="sandbox">
+        <div class="docs-section-head">
+          <b>08</b>
+          <span>运行时 / SANDBOX</span>
+          <span>ISOLATED VM</span>
+        </div>
+
+        <h2>Lua 沙箱</h2>
+
+        <p class="docs-intro">
+          每个插件跑在独立的 VM 和独立的 isolate 里，有自己的调用队列和时间预算。
+          标准库里涉及文件系统、进程和动态加载的部分全部移除了。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>被移除</th><th>后果</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>io</code>、<code>os</code></td><td>没有文件、环境变量、时钟和进程接口</td></tr>
+              <tr><td><code>package</code>、<code>debug</code></td><td>不能加载 C 模块，也不能操作调用栈</td></tr>
+              <tr><td><code>dofile</code>、<code>loadfile</code>、<code>load</code>、<code>loadstring</code></td><td>不能执行动态生成的代码</td></tr>
+              <tr><td><code>print</code></td><td>普通插件里为 <code>nil</code>；用 <code>host.log</code></td></tr>
+              <tr><td><code>require</code></td><td>被重新实现为「从 ZIP 内加载 <code>.lua</code>」，见下</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="sandbox-require">require 与模块路径</h3>
+
+        <p class="docs-prose">
+          <code>require</code> 只能加载 ZIP 里的 Lua 文件。模块名就是文件路径去掉末尾
+          <code>.lua</code>，再把 <code>/</code> 换成 <code>.</code>：
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>ZIP 内路径</th><th>写法</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>api.lua</code></td><td><code>require("api")</code></td></tr>
+              <tr><td><code>lib/util.lua</code></td><td><code>require("lib.util")</code></td></tr>
+              <tr><td><code>vendor/sign/rsa.lua</code></td><td><code>require("vendor.sign.rsa")</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          同一个模块只会执行一次，结果会被缓存。加载不存在的模块报
+          <code>unknown module: &lt;name&gt;</code>；模块文件没有返回值时按 <code>true</code> 处理。
+          入口文件本身不能被 <code>require</code>，它由宿主单独加载。
+        </p>
+
+        <h3 class="docs-h3" id="sandbox-budget">执行预算</h3>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>项目</th><th>数值</th><th>超限之后</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>单次调用指令数</td><td class="is-num">250000</td><td>按超时处理（code 408），VM 重建</td></tr>
+              <tr><td>单次调用墙钟</td><td class="is-num">40 秒</td><td>按超时处理（code 408），VM 重建</td></tr>
+              <tr><td>启动握手</td><td class="is-num">40 秒</td><td>插件启动失败</td></tr>
+              <tr><td><code>host.http</code> 单次</td><td class="is-num">30 秒</td><td>调用失败</td></tr>
+              <tr><td><code>host.sleep</code></td><td class="is-num">0–60000 ms</td><td>按 60000 处理</td></tr>
+              <tr><td>socket / websocket 接收</td><td class="is-num">0–30000 ms</td><td>返回 <code>nil</code>，不报错</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          后台操作有更紧的预算：<code>scrobble</code>、<code>playStats</code>、<code>lyrics</code>、
+          <code>song</code> 各 10 秒。这样一次卡住的上报不会堵住下一条取流请求。
+          <code>stream</code> 是用户在等的那一次调用，用默认预算，并且超时后客户端会在新 VM 上重试一次。
+        </p>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            指令预算比看起来容易用完。不要在 <code>call</code> 里对几千条数据逐条拼字符串或做嵌套排序，
+            批量数据交给 <code>host.json_decode</code>，由宿主完成。
+            死循环会以「插件响应超时，已自动重启插件」结束：会话还在，这次调用丢了。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="errors">
+        <div class="docs-section-head">
+          <b>09</b>
+          <span>运行时 / ERRORS</span>
+          <span>FAILURE SEMANTICS</span>
+        </div>
+
+        <h2>错误与超时</h2>
+
+        <p class="docs-intro">
+          错误分两层：Lua 抛出的错误会让当前调用失败；返回一张
+          <code>{ error = { ... } }</code> 表则是「预期内的失败」，客户端会据此提示用户重试或重新登录。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>写法</th><th>客户端行为</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>error("boom")</code></td>
+                <td>调用失败，界面提示「插件请求失败」。错误文本不会直接展示给用户。</td>
+              </tr>
+              <tr>
+                <td><code>return { error = { code = 40 } }</code></td>
+                <td>识别为登录态失效，提示重新登录。</td>
+              </tr>
+              <tr>
+                <td><code>return { error = { code = 40, httpStatus = 401 } }</code></td>
+                <td>同上；<code>httpStatus</code> 优先于 <code>code</code> 里的状态码。</td>
+              </tr>
+              <tr>
+                <td><code>return nil</code></td>
+                <td>合法的「没有内容」：未登录、无歌词、无结果。不是错误。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="errors-http">把 HTTP 失败变成可读的错误</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>local response = host.http({ url = url, headers = headers })
+if response.status ~= 200 then
+  -- 401/403 交给客户端走重新登录，429 交给重试，其余按服务端故障处理
+  return { error = { code = response.status, httpStatus = response.status } }
+end</code></pre>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            <code>code</code> 落在 400–599 之间时会被当作 HTTP 状态解释。业务错误码请用范围外的数值，
+            例如 <code>code = 70</code> 表示当前歌曲不可用。
+          </p>
+        </div>
+
+        <h3 class="docs-h3" id="errors-pcall">用 pcall 处理宿主错误</h3>
+
+        <p class="docs-prose">
+          <code>host.*</code> 在参数非法、权限没给、目标越权时都抛 Lua 错误。
+          可能失败的调用包在 <code>pcall</code> 里，沙箱的 <code>pcall</code> 是异步版本，
+          能包住会挂起的 <code>host.http</code>。
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>local ok, result = pcall(host.http, { url = "https://api.example.com/ping" })
+if not ok then
+  host.log("warn", "request failed", { reason = tostring(result) })
+  return nil
+end
+return result</code></pre>
+        </div>
+
+        <h3 class="docs-h3" id="errors-messages">宿主会说什么</h3>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>错误文本</th><th>含义</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Network permission required</code></td><td>清单声明了域名，但用户还没同意网络授权</td></tr>
+              <tr><td><code>Network permission denied</code></td><td>目标域名不在 <code>permissions.network</code> 里，或不是 HTTPS</td></tr>
+              <tr><td><code>Plugin data permission denied</code></td><td>数据权限被拒绝（code 403）</td></tr>
+              <tr><td><code>Plugin data permission revoked</code></td><td>调用过程中权限被用户撤销</td></tr>
+              <tr><td><code>Storage permission required</code></td><td>清单没有 <code>permissions.storage</code></td></tr>
+              <tr><td><code>Filesystem permission required</code></td><td>没有文件权限，或用户拒绝</td></tr>
+              <tr><td><code>Storage full</code> / <code>Filesystem storage full</code></td><td>持久化空间或文件配额已满</td></tr>
+              <tr><td><code>插件响应超时，已自动重启插件。</code></td><td>墙钟或指令预算耗尽（code 408）</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="docs-section" id="describe">
+        <div class="docs-section-head">
+          <b>10</b>
+          <span>音乐平台 / DESCRIBE</span>
+          <span>PLATFORM LIST</span>
+        </div>
+
+        <h2>describe</h2>
+
+        <p class="docs-intro">
+          插件启用后客户端调的第一个操作，返回这个插件提供哪些平台。
+          一个插件可以带多个平台，后续调用里的 <code>args.platform</code> 就是这里列的 <code>id</code>。
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>if operation == "describe" then
+  return {
+    providers = {
+      {
+        id = "example",
+        name = "Example Music",
+        auth = { "qr", "cookie" },
+        capabilities = { "search", "playlists", "lyrics", "scrobble" },
+        loginHint = "使用 Example Music App 扫码登录",
+        cookieHint = "从浏览器开发者工具复制 Cookie",
+        forgotPasswordUrl = "https://example.com/forgot",
+      },
+    },
+  }
+end</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>字段</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>平台 ID，<code>^[a-z][a-z0-9_-]{1,39}$</code>，不能是 <code>local</code>，同一插件内不可重复</td></tr>
+              <tr><td><code>name</code></td><td>显示名称，非空</td></tr>
+              <tr><td><code>auth</code></td><td>登录方式：<code>qr</code> / <code>sms</code> / <code>password</code> / <code>cookie</code>。省略时沿用清单</td></tr>
+              <tr><td><code>capabilities</code></td><td>能力列表。省略时沿用清单；返回空表表示「什么都不支持」</td></tr>
+              <tr><td><code>loginHint</code></td><td>登录页上的提示文案</td></tr>
+              <tr><td><code>cookieHint</code></td><td>Cookie 登录页上的提示文案</td></tr>
+              <tr><td><code>forgotPasswordUrl</code></td><td>忘记密码链接</td></tr>
+              <tr><td><code>experimental</code></td><td><code>true</code> 时在界面上标注为实验性平台</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            <code>capabilities</code> 省略和不写内容不是一回事。省略时沿用清单里的声明；
+            显式返回 <code>{}</code> 表示一个能力都不声明，首页模块和菜单入口都会消失。
+            要按账号或地区开关能力，就用这种写法。
+          </p>
+        </div>
+
+        <h3 class="docs-h3" id="describe-capabilities">能力对照表</h3>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>能力</th><th>需要实现的操作</th><th>影响</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>search</code></td><td><code>search</code></td><td>搜索页</td></tr>
+              <tr><td><code>browseAlbums</code></td><td><code>albums</code>、<code>album</code>、<code>albumSongs</code></td><td>专辑浏览与详情</td></tr>
+              <tr><td><code>savedAlbums</code></td><td><code>savedAlbums</code></td><td>收藏的专辑</td></tr>
+              <tr><td><code>playlists</code></td><td><code>playlists</code>、<code>playlist</code>、<code>playlistSongs</code></td><td>歌单列表与详情</td></tr>
+              <tr><td><code>editPlaylists</code></td><td><code>createPlaylist</code>、<code>addToPlaylist</code>、<code>removeFromPlaylist</code></td><td>新建歌单、增删曲目</td></tr>
+              <tr><td><code>favorites</code></td><td><code>favorites</code>、<code>setFavorite</code></td><td>喜欢歌单与收藏按钮</td></tr>
+              <tr><td><code>lyrics</code></td><td><code>lyrics</code></td><td>歌词页</td></tr>
+              <tr><td><code>scrobble</code></td><td><code>scrobble</code>、<code>playStats</code></td><td>播放上报与统计</td></tr>
+              <tr><td><code>recommendations</code></td><td><code>recommendations</code></td><td>猜你喜欢</td></tr>
+              <tr><td><code>comments</code></td><td><code>comments</code>、<code>setCommentLiked</code></td><td>歌曲评论</td></tr>
+              <tr><td><code>listenTogether</code></td><td><code>listenTogether</code></td><td>一起听入口</td></tr>
+              <tr><td><code>radio</code></td><td><code>radio</code></td><td>私人漫游、心动模式、歌手电台</td></tr>
+              <tr><td><code>charts</code></td><td><code>charts</code>、<code>playlistSongs</code></td><td>插件榜单（与客户端外部榜单合并）</td></tr>
+              <tr><td><code>homeFeed</code></td><td><code>homeFeed</code></td><td>每日推荐、精选、新发行</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          能力名不区分大小写，<code>_</code> 和 <code>-</code> 会被折叠掉：
+          <code>listenTogether</code>、<code>listen_together</code>、<code>listen-together</code>
+          是同一个能力。无法识别的名字会被忽略，不会导致整个平台描述失败。
+        </p>
+
+        <p class="docs-prose">
+          还有三个标志不属于 <code>MusicCapability</code>，但同样写在 <code>capabilities</code> 里：
+          <code>theme</code> 让插件参与皮肤加载，<code>exportCookie</code> 打开 Cookie 导出入口，
+          <code>player_events</code> 用来接收播放事件广播。
+        </p>
+
+        <h3 class="docs-h3" id="describe-media">素材请求规则</h3>
+
+        <p class="docs-prose">
+          封面、头像这类公共素材常常要带特定 <code>Referer</code> 或缩图参数。
+          在 <code>describe</code> 顶层用 <code>media</code> 声明规则，客户端按规则发请求，它不认识任何平台的域名。
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>media = {
+  {
+    host = "*.images.example.com",
+    headers = { ["Referer"] = "https://example.com/" },
+    artworkResize = { parameter = "size", value = "{size}x{size}" },
+    fallbackHosts = { "images2.example.com" },
+  },
+}</code></pre>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            素材规则只能写在 <code>permissions.network</code> 允许的主机上。
+            不要把账号 Cookie 放进公共素材规则，它会出现在每一次封面请求里。
+            需要鉴权的音频请求头随单次 <code>stream</code> 结果返回，那样不会进队列快照。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="auth">
+        <div class="docs-section-head">
+          <b>11</b>
+          <span>音乐平台 / AUTH</span>
+          <span>SESSION</span>
+        </div>
+
+        <h2>登录与会话</h2>
+
+        <p class="docs-intro">
+          登录拆成了若干小操作，客户端只显示你在 <code>auth</code> 里声明过的方式。
+          凭据由插件自己保存，客户端不接触 Cookie、密码和令牌。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>操作</th><th>参数</th><th>返回</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>session</code></td><td>—</td><td>已登录返回账号对象，未登录返回 <code>nil</code></td></tr>
+              <tr><td><code>loginCookie</code></td><td><code>cookie</code></td><td>账号对象</td></tr>
+              <tr><td><code>loginPassword</code></td><td><code>account</code>、<code>password</code></td><td>账号对象</td></tr>
+              <tr><td><code>sendCaptcha</code></td><td><code>phone</code></td><td>任意值</td></tr>
+              <tr><td><code>loginCaptcha</code></td><td><code>phone</code>、<code>captcha</code></td><td>账号对象</td></tr>
+              <tr><td><code>qrKey</code></td><td>—</td><td>二维码 key</td></tr>
+              <tr><td><code>qrUrl</code></td><td><code>key</code>、<code>web</code>（bool）、<code>rich</code>（bool）</td><td>URL 字符串，或 <code>{url, code, hint, actionUrl}</code></td></tr>
+              <tr><td><code>qrCheck</code></td><td><code>key</code></td><td>数字状态码：等待 / 已扫码 / 成功 / 过期</td></tr>
+              <tr><td><code>logout</code></td><td>—</td><td>任意值</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="auth-account">账号对象</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>return {
+  id = "12345678",              -- 平台原始账号 ID，字符串
+  name = "Example User",        -- 昵称
+  avatarUrl = "https://...",    -- 头像
+  signature = "签名",           -- 可选
+  membership = "VIP",           -- 可选，会员名称
+}</code></pre>
+        </div>
+
+        <p class="docs-prose">
+          <code>session</code> 在客户端启动、切换平台、刷新时都会被调用，所以它必须只读、快速、无副作用。
+          不要在这里发登录请求，否则「未登录」状态每次刷新都要多走一次网络往返。
+        </p>
+
+        <h3 class="docs-h3" id="auth-qr">扫码登录</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>if operation == "qrKey" then
+  local body = api.post("/login/qr/key")
+  host.storage_set("qr.key", body.key)
+  return body.key
+end
+
+if operation == "qrUrl" then
+  -- 设备授权码流：返回 code 与跳转链接，界面会显示验证码
+  local body = api.post("/login/qr/create", { key = args.key })
+  return {
+    url = body.qrUrl,
+    code = body.userCode,
+    hint = "在手机上打开 App，输入下面的验证码",
+    actionUrl = body.browserUrl,
+  }
+end
+
+if operation == "qrCheck" then
+  local body = api.get("/login/qr/check", { key = args.key })
+  if body.code == 803 then
+    host.storage_set("cookie", body.cookie)
+  end
+  return body.code
+end</code></pre>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            客户端不解析二维码 URL 里的任何平台参数。<code>qrUrl</code> 直接返回字符串就够了；
+            只有需要展示验证码或引导用户去浏览器时才用 <code>{url, code, hint, actionUrl}</code>。
+            <code>web</code> 参数表示当前是 Web 端，可以据此换成 H5 链接。
+          </p>
+        </div>
+
+        <h3 class="docs-h3" id="auth-store">凭据怎么存</h3>
+
+        <ul class="docs-prose">
+          <li>会话凭据只放 <code>host.storage_*</code>，不要写进日志、错误文本或长期缓存。</li>
+          <li>多平台插件必须按 <code>args.platform</code> 分开存，否则两个账号会互相覆盖。</li>
+          <li>失败的登录尝试要保留之前有效的凭据，不要把用户从已登录状态踢出去。</li>
+          <li><code>logout</code> 只清除当前平台的凭据。</li>
+        </ul>
+      </section>
+
+      <section class="docs-section" id="catalog">
+        <div class="docs-section-head">
+          <b>12</b>
+          <span>音乐平台 / CATALOG</span>
+          <span>SEARCH &amp; DETAIL</span>
+        </div>
+
+        <h2>检索与详情</h2>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>操作</th><th>参数</th><th>返回</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>search</code></td><td><code>query</code>、<code>limit</code>、<code>offset</code></td><td><code>{songs, albums, artists, playlists}</code>，四个数组</td></tr>
+              <tr><td><code>song</code></td><td><code>id</code></td><td>歌曲对象</td></tr>
+              <tr><td><code>album</code></td><td><code>id</code></td><td>专辑对象</td></tr>
+              <tr><td><code>albums</code></td><td><code>sort</code>、<code>limit</code>、<code>offset</code></td><td>专辑数组</td></tr>
+              <tr><td><code>albumSongs</code></td><td><code>id</code>、<code>limit</code>、<code>offset</code></td><td>歌曲数组</td></tr>
+              <tr><td><code>artist</code></td><td><code>id</code></td><td>歌手对象</td></tr>
+              <tr><td><code>artistSongs</code></td><td><code>id</code>、<code>limit</code>、<code>offset</code></td><td>歌曲数组</td></tr>
+              <tr><td><code>artistAlbums</code></td><td><code>id</code>、<code>limit</code>、<code>offset</code></td><td>专辑数组</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="catalog-paging">分页约定</h3>
+
+        <p class="docs-prose">
+          <code>limit</code> 与 <code>offset</code> 由客户端给出，插件只返回当前页。客户端会按
+          <code>limit</code> 截断，并用「返回条数是否够 <code>limit</code>」判断还有没有下一页。
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>if operation == "playlistSongs" then
+  local body = api.get("/playlist/track/all", {
+    id = args.id,
+    limit = args.limit,
+    offset = args.offset,
+  })
+  local out = {}
+  for _, row in ipairs(body.songs or {}) do
+    out[#out + 1] = toSong(row)
+  end
+  return out
+end</code></pre>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            返回满 <code>limit</code> 条就代表可能还有下一页。实际只有 30 条却返回了 30 条，
+            客户端会再请求第 2 页，拿到空页才停。最后一页少返回一条，比返满更省事。
+          </p>
+        </div>
+
+        <p class="docs-prose">
+          Lua 的空表跨边界之后是一张空 map <code>{}</code> 而不是 <code>[]</code>。
+          客户端把「空 map」视为「没有数据」，这不算错误；但非空的 map 或标量回来会被判为无效负载。
+        </p>
+
+        <h3 class="docs-h3" id="catalog-sort">albums 的排序参数</h3>
+
+        <p class="docs-prose">
+          <code>sort</code> 是客户端枚举的名字，常见值是 <code>recent</code>、<code>alphabetical</code>、
+          <code>artist</code>、<code>year</code> 一类。不需要区分排序时忽略它即可，但不要因为它存在就报错。
+        </p>
+      </section>
+
+      <section class="docs-section" id="playlists">
+        <div class="docs-section-head">
+          <b>13</b>
+          <span>音乐平台 / PLAYLISTS</span>
+          <span>READ &amp; WRITE</span>
+        </div>
+
+        <h2>歌单与收藏</h2>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>操作</th><th>参数</th><th>返回</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>playlists</code></td><td><code>limit</code>、<code>offset</code></td><td>当前账号的歌单数组</td></tr>
+              <tr><td><code>playlist</code></td><td><code>id</code></td><td>歌单对象</td></tr>
+              <tr><td><code>playlistSongs</code></td><td><code>id</code>、<code>limit</code>、<code>offset</code></td><td>歌曲数组</td></tr>
+              <tr><td><code>createPlaylist</code></td><td><code>name</code>、<code>isPublic</code></td><td>新建的歌单对象</td></tr>
+              <tr><td><code>addToPlaylist</code></td><td><code>playlist</code>、<code>songs</code>（歌曲 ID 数组）</td><td>任意值</td></tr>
+              <tr><td><code>removeFromPlaylist</code></td><td><code>playlist</code>、<code>indexes</code>（从 0 开始）</td><td>任意值</td></tr>
+              <tr><td><code>favorites</code></td><td><code>limit</code>、<code>offset</code></td><td>喜欢歌单的歌曲数组</td></tr>
+              <tr><td><code>setFavorite</code></td><td><code>id</code>、<code>favorite</code>（bool）</td><td>任意值</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="playlists-favorites">喜欢歌单</h3>
+
+        <p class="docs-prose">
+          当前账号自己的喜欢歌单要在 <code>playlists</code> 里标 <code>isFavorites = true</code>，
+          同时满足 <code>writable = true</code> 或 <code>owner</code> 等于当前账号 ID，客户端才会认定它；
+          认不出时它会用固定键造一个本地收藏歌单，你的服务端收藏就变成两套了。
+          保留服务端返回的名称（例如「<em>用户名</em>喜欢的音乐」），客户端不会再生成一份同内容的歌单。
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>{
+  id = "501",
+  name = "Example User喜欢的音乐",
+  description = "",
+  coverUrl = "https://...",
+  songCount = 512,
+  owner = "12345678",
+  writable = true,
+  isFavorites = true,
+}</code></pre>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            <code>removeFromPlaylist</code> 的 <code>indexes</code> 是「歌曲在当前页里的位置」，
+            从 0 开始，按降序删除更安全。需要服务端歌曲 ID 时请二次查询，别把页内下标当 ID 用。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="playback">
+        <div class="docs-section-head">
+          <b>14</b>
+          <span>音乐平台 / PLAYBACK</span>
+          <span>STREAM &amp; SCROBBLE</span>
+        </div>
+
+        <h2>播放与上报</h2>
+
+        <h3 class="docs-h3" id="playback-stream">stream</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>if operation == "stream" then
+  local body = api.get("/song/url", { id = args.id, level = args.quality })
+  local item = body.data[1]
+  if not item or not item.url then
+    return { error = { code = 70 } }   -- 当前歌曲或音质不可用
+  end
+  return {
+    url = item.url,                  -- 必须是 http(s)
+    contentType = "audio/mpeg",
+    suffix = "mp3",
+    bitRate = item.br,
+    size = item.size,
+    headers = { ["Referer"] = "https://example.com/" },
+  }
+end</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>键</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>url</code></td><td>播放地址，必填</td></tr>
+              <tr><td><code>contentType</code></td><td>MIME 类型，例如 <code>audio/flac</code></td></tr>
+              <tr><td><code>suffix</code></td><td>文件后缀，用于缓存命名</td></tr>
+              <tr><td><code>bitRate</code></td><td>码率</td></tr>
+              <tr><td><code>size</code></td><td>字节数</td></tr>
+              <tr><td><code>transcoded</code></td><td>是否转码流</td></tr>
+              <tr><td><code>headers</code></td><td>请求该地址时附加的请求头；只随这一次播放生效，不进入队列快照</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          <code>args.quality</code> 是客户端当前选的音质等级。提供不了这一档时，
+          返回低一档的流并如实填写 <code>bitRate</code>，比直接报错好。
+        </p>
+
+        <h3 class="docs-h3" id="playback-scrobble">scrobble 与 playStats</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>if operation == "scrobble" then
+  -- submission=false 表示只上报进度，不计入播放次数
+  api.post("/scrobble", {
+    id = args.id,
+    time = args.playedMs,
+    submit = args.submission and "true" or "false",
+  })
+  return true
+end
+
+if operation == "playStats" then
+  local body = api.get("/user/play/records", { limit = args.limit, offset = args.offset })
+  local records = {}
+  for _, row in ipairs(body.records or {}) do
+    records[#records + 1] = { song = toSong(row.song), playCount = row.count }
+  end
+  return { records = records }
+end</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>操作</th><th>参数</th><th>返回</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>scrobble</code></td><td><code>id</code>、<code>playedMs</code>、<code>submission</code>、<code>time</code>（ISO 8601）</td><td>任意值</td></tr>
+              <tr><td><code>playStats</code></td><td><code>limit</code>、<code>offset</code></td><td><code>{records = [{song, playCount, skipCount, durationMs}]}</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            这两个操作只有 10 秒预算，因为它们跑在后台。一次卡住的上报会挤掉下一条取流请求，
+            所以不要在 <code>scrobble</code> 里做额外查询。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="lyrics">
+        <div class="docs-section-head">
+          <b>15</b>
+          <span>音乐平台 / LYRICS</span>
+          <span>LRC · YRC · TTML</span>
+        </div>
+
+        <h2>歌词</h2>
+
+        <p class="docs-intro">
+          <code>lyrics</code> 返回一个<strong>歌词候选数组</strong>，客户端按数组顺序取第一个可用项。
+          原文、翻译、罗马音是三条独立的轨道，可以只给其中一条。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>键</th><th>类型</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>synced</code></td><td>bool</td><td>是否有时间轴</td></tr>
+              <tr><td><code>lines</code></td><td>数组</td><td>逐行歌词，见下</td></tr>
+              <tr><td><code>lrc</code></td><td>string</td><td>LRC 原文</td></tr>
+              <tr><td><code>translation</code> / <code>tlyric</code></td><td>string</td><td>逐行翻译</td></tr>
+              <tr><td><code>wordTranslation</code> / <code>ytlrc</code></td><td>string</td><td>逐字翻译</td></tr>
+              <tr><td><code>romanization</code> / <code>romanLyric</code> / <code>romaji</code> / <code>rlyric</code></td><td>string</td><td>逐行音译</td></tr>
+              <tr><td><code>wordRomanization</code> / <code>yromalrc</code></td><td>string</td><td>逐字音译</td></tr>
+              <tr><td><code>wordByWord</code> / <code>yrc</code></td><td>string</td><td>逐字歌词（YRC）</td></tr>
+              <tr><td><code>ttml</code></td><td>string</td><td>AMLL TTML，带 <code>x-roman</code> / <code>x-translation</code> 角色</td></tr>
+              <tr><td><code>pureMusic</code></td><td>bool</td><td>纯音乐标记</td></tr>
+              <tr><td><code>offsetMs</code></td><td>number</td><td>整体时间偏移</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="lyrics-lines">lines 的字段</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>return {
+  {
+    synced = true,
+    lines = {
+      { text = "君へ", startMs = 1000,
+        translation = "给你",
+        romanization = "kimi e" },
+      { text = "届け", startMs = 3200,
+        translation = "传达给你",
+        romanization = "todoke" },
+    },
+  },
+}</code></pre>
+        </div>
+
+        <p class="docs-prose">
+          每行的 <code>text</code> 必填，<code>startMs</code> 可选（缺省表示无时间的纯文本行）。
+          翻译与音译分别支持 <code>translation</code> / <code>translatedLyric</code> 和
+          <code>romanization</code> / <code>romanLyric</code> / <code>romaji</code> 两组别名。
+        </p>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            普通 LRC 没有明确音译标记时，客户端不会凭语言或重复时间戳去猜音译。
+            要提供音译就给 <code>romanization</code> 轨道或 TTML 的 <code>ttm:role="x-roman"</code>。
+            用户关闭罗马音显示后，正在播放、桌面歌词和导出都会隐藏音译，原文和翻译保留。
+          </p>
+        </div>
+
+        <p class="docs-prose">
+          歌词会被客户端下载并缓存，插件不需要管理本地文件。没有音译的行不会占额外空间，所以按行提供 <code>romanization</code> 比整段返回一个可能对不齐的字符串更稳。
+        </p>
+      </section>
+
+      <section class="docs-section" id="extras">
+        <div class="docs-section-head">
+          <b>16</b>
+          <span>音乐平台 / EXTRAS</span>
+          <span>OPTIONAL SURFACES</span>
+        </div>
+
+        <h2>扩展能力</h2>
+
+        <p class="docs-intro">
+          这些接口都是可选的，声明了对应能力才会被调用。返回空数组合法：
+          客户端不会因为接口在就摆一个空模块出来。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>操作</th><th>参数</th><th>返回</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>homeFeed</code></td><td>—</td><td><code>{featured, featuredSongs, quick, daily, recommended, playlists, albums, editorialPlaylists}</code></td></tr>
+              <tr><td><code>recommendations</code></td><td><code>limit</code></td><td>歌曲数组</td></tr>
+              <tr><td><code>savedAlbums</code></td><td><code>limit</code>、<code>offset</code></td><td>专辑数组</td></tr>
+              <tr><td><code>charts</code></td><td>—</td><td>歌单数组；歌曲用 <code>playlistSongs</code> 分页取</td></tr>
+              <tr><td><code>radio</code></td><td><code>kind</code>、<code>seed</code>、<code>playlist</code>、<code>limit</code></td><td>歌曲数组</td></tr>
+              <tr><td><code>comments</code></td><td><code>id</code>、<code>limit</code>、<code>offset</code></td><td><code>{hot, latest, total, hasMore}</code></td></tr>
+              <tr><td><code>setCommentLiked</code></td><td><code>id</code>、<code>commentId</code>、<code>liked</code></td><td>任意值</td></tr>
+              <tr><td><code>listenTogether</code></td><td><code>operation</code> + 其它字段</td><td><code>{roomId, inviterId, members}</code></td></tr>
+              <tr><td><code>exportCookie</code></td><td>—</td><td>当前平台的 Cookie 字符串</td></tr>
+              <tr><td><code>theme</code></td><td>—</td><td><code>{theme = {...}, layout = {...}}</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="extras-radio">radio</h3>
+
+        <p class="docs-prose">
+          <code>kind</code> 是 <code>personal</code>、<code>heart</code> 或 <code>artist</code>。
+          <code>seed</code> 是起播歌曲 ID，<code>playlist</code> 是歌单 ID（心动模式会用到）。
+          心动模式还需要一个可用的喜欢歌单，否则入口不会出现。
+        </p>
+
+        <h3 class="docs-h3" id="extras-comments">评论</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>{
+  hot = { { id = "9001", content = "好听", author = "某人",
+            authorId = "42", avatarUrl = "https://...",
+            time = 1730000000000, location = "上海",
+            liked = false, likedCount = 12,
+            replies = { { author = "另一个人", content = "+1" } } } },
+  latest = { ... },
+  total = 2048,
+  hasMore = true,
+}</code></pre>
+        </div>
+
+        <p class="docs-prose">
+          评论 ID 用字符串，时间用 Unix 毫秒。所有远端 ID 都应视作不透明字符串，
+          不要假设它是数字。
+        </p>
+
+        <h3 class="docs-h3" id="extras-listen-together">一起听</h3>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>operation</th><th>参数</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>create</code></td><td>—</td><td>建房，返回 <code>roomId</code>、<code>inviterId</code></td></tr>
+              <tr><td><code>createMulti</code></td><td><code>songId</code>、<code>playedTime</code>、<code>nextSongIds</code></td><td>用当前曲目建房；没有 <code>songId</code> 时按 <code>create</code> 处理</td></tr>
+              <tr><td><code>join</code></td><td><code>roomId</code>、<code>inviterId</code></td><td>接受邀请</td></tr>
+              <tr><td><code>status</code></td><td><code>roomId</code></td><td>房间状态与成员；不带 <code>roomId</code> 时取当前账号仍在的房间</td></tr>
+              <tr><td><code>leave</code></td><td><code>roomId</code></td><td>退出或结束</td></tr>
+              <tr><td><code>heartbeat</code></td><td><code>roomId</code>、<code>songId</code>、<code>playStatus</code>、<code>progress</code>、<code>playlistVersion</code></td><td>每 5 秒一次</td></tr>
+              <tr><td><code>command</code></td><td><code>roomId</code>、<code>command</code></td><td>播放指令，见下</td></tr>
+              <tr><td><code>syncPlaylist</code></td><td><code>roomId</code></td><td>可选，读房间队列</td></tr>
+              <tr><td><code>syncList</code></td><td><code>roomId</code>、<code>playlistVersion</code>、<code>playlist</code></td><td>可选，上报队列与版本</td></tr>
+              <tr><td><code>commands</code></td><td><code>roomId</code>、<code>since</code></td><td>可选，取两次心跳之间的指令</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          客户端只做房间状态与心跳，不解析任何平台字段。心跳带回的曲目变化就是「别人切歌」，
+          队列版本变化才触发 <code>syncPlaylist</code>；<code>command.serverSeq</code> 单调递增，
+          重复返回的同一条指令不会被执行两次。自己发出的指令按 <code>userId</code> 忽略。
+        </p>
+
+        <div class="docs-note">
+          <span class="docs-note-label">兼容</span>
+          <p>
+            只实现 <code>create / join / status / leave / heartbeat / command</code> 就够了。
+            返回值可以不带 <code>code</code>（缺失视为成功），成员列表为空时客户端保留上一次的结果。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="models">
+        <div class="docs-section-head">
+          <b>17</b>
+          <span>音乐平台 / MODELS</span>
+          <span>SHAPES</span>
+        </div>
+
+        <h2>数据模型</h2>
+
+        <p class="docs-intro">
+          所有模型都是普通 table。ID 在插件内部使用，客户端会把 provider、连接和实体类型编码进
+          <code>MusicId</code>，所以你只需要保证「同一个实体总是返回同一个 ID」。
+        </p>
+
+        <h3 class="docs-h3" id="models-song">歌曲</h3>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>键</th><th>类型</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>string / number</td><td>平台歌曲 ID，必填</td></tr>
+              <tr><td><code>title</code></td><td>string</td><td>标题</td></tr>
+              <tr><td><code>artists</code></td><td>数组</td><td>歌手对象数组，见下</td></tr>
+              <tr><td><code>albumId</code></td><td>string / number</td><td>可空</td></tr>
+              <tr><td><code>albumName</code></td><td>string</td><td></td></tr>
+              <tr><td><code>coverUrl</code></td><td>string</td><td>封面地址</td></tr>
+              <tr><td><code>durationMs</code></td><td>number</td><td>时长，毫秒</td></tr>
+              <tr><td><code>starred</code></td><td>bool</td><td>是否已喜欢</td></tr>
+              <tr><td><code>contentType</code>、<code>suffix</code>、<code>bitRate</code></td><td>—</td><td>可选的格式信息</td></tr>
+              <tr><td><code>translatedTitle</code></td><td>string</td><td>翻译标题</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="models-album">专辑与歌手</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>-- 专辑
+{ id = "301", title = "Example Album", artists = { artist },
+  coverUrl = "https://...", year = 2024, songCount = 12,
+  description = "" }
+
+-- 歌手
+{ id = "42", name = "Example Artist", coverUrl = "https://...",
+  description = "", albumCount = 8 }</code></pre>
+        </div>
+
+        <h3 class="docs-h3" id="models-playlist">歌单</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>{ id = "501", name = "歌单名", description = "",
+  coverUrl = "https://...", songCount = 88, owner = "12345678",
+  writable = true, isPublic = true, isFavorites = false }</code></pre>
+        </div>
+
+        <p class="docs-prose">
+          <code>writable</code> 决定界面是否给出编辑入口，<code>isFavorites</code> 决定它是不是「喜欢歌单」。
+          两个字段都只认 <code>true</code>，缺省即 <code>false</code>。
+        </p>
+
+        <h3 class="docs-h3" id="models-hints">几个容易踩的点</h3>
+
+        <ul class="docs-prose">
+          <li><code>id</code> 必须非空。空 ID 在第一次被当作请求参数使用时才炸，报错位置离原因很远。</li>
+          <li><code>durationMs</code> 缺省按 0 处理，界面会显示 0:00，尽量填上。</li>
+          <li><code>artists</code> 里的每一项同样按歌手模型解析，至少要有 <code>id</code> 和 <code>name</code>。</li>
+          <li>布尔字段只认真正的布尔值，<code>"true"</code> 字符串会被当成 <code>false</code>。</li>
+          <li>数字字段接受整数与浮点；从 JSON 解出来的数字可以直接用。</li>
+          <li>
+            <code>coverUrl</code>、<code>owner</code>、<code>contentType</code> 这类可空字段只接受字符串或
+            <code>nil</code>。传数字会直接解析失败，整次调用按无效负载处理。
+          </li>
+          <li>歌曲的 <code>trackNumber</code>、<code>discNumber</code> 不会被读取，歌词的 <code>language</code> 同理，填了也没用。</li>
+        </ul>
+      </section>
+
+      <section class="docs-section" id="error-codes">
+        <div class="docs-section-head">
+          <b>18</b>
+          <span>音乐平台 / ERRORS</span>
+          <span>RETRY MATRIX</span>
+        </div>
+
+        <h2>错误码与重试</h2>
+
+        <p class="docs-intro">
+          预期内的失败返回 <code>{ error = { code, httpStatus } }</code>，客户端据此决定提示用户重新登录、
+          保留重试机会，还是降一档音质再试。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>码</th><th>含义</th><th>客户端行为</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="is-num">40</td><td>未登录或登录已失效</td><td>提示重新登录</td></tr>
+              <tr><td class="is-num">41</td><td>同上（兼容旧值）</td><td>提示重新登录</td></tr>
+              <tr><td class="is-num">44</td><td>同上（兼容旧值）</td><td>提示重新登录</td></tr>
+              <tr><td class="is-num">401</td><td>HTTP 未授权</td><td>提示重新登录</td></tr>
+              <tr><td class="is-num">429</td><td>被限流</td><td>保留重试机会，不弹登录</td></tr>
+              <tr><td class="is-num">70</td><td>当前歌曲或音质不可用</td><td>尝试较低音质</td></tr>
+              <tr><td class="is-num">408</td><td>调用超时（由宿主产生）</td><td><code>stream</code> 会在新 VM 上重试一次</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            <code>code</code> 落在 400–599 会被当成 HTTP 状态解释。业务错误码请用范围外的数字，
+            否则一个自定义的 <code>code = 500</code> 会被显示成服务端故障。
+          </p>
+          <p>
+            只有<strong>返回</strong>这张错误表才会进入上面那张表的分支。抛 Lua 错误
+            （包括 <code>error("HTTP 401")</code>）只会变成「插件请求失败」，
+            <code>401</code> 不会触发重新登录的提示；登录失效必须用返回错误表来表达。
+          </p>
+        </div>
+
+        <p class="docs-prose">
+          错误对象里不要放服务端响应正文或凭据，它可能出现在界面上。需要排查细节时写
+          <code>host.log</code>，日志会被脱敏。
+        </p>
+      </section>
+
+      <section class="docs-section" id="http">
+        <div class="docs-section-head">
+          <b>19</b>
+          <span>host / HTTP</span>
+          <span>NETWORK</span>
+        </div>
+
+        <h2>网络请求</h2>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>local response = host.http({
+  url = "https://api.example.com/search",
+  method = "POST",
+  headers = { ["Content-Type"] = "application/json", ["Cookie"] = cookie },
+  body = host.json_encode({ keyword = "Miku", limit = 30 }),
+})
+-- response = { status = 200, headers = {...}, body = "..." }</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>项目</th><th>规则</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>协议</td><td>只允许 <code>https</code>，URL 不能带用户名或密码</td></tr>
+              <tr><td>主机</td><td>必须命中 <code>permissions.network</code>，否则 <code>Network permission denied</code></td></tr>
+              <tr><td>方法</td><td><code>GET</code> / <code>POST</code> / <code>PUT</code> / <code>DELETE</code> / <code>PATCH</code> / <code>HEAD</code></td></tr>
+              <tr><td>请求头</td><td><code>host</code>、<code>content-length</code>、<code>connection</code> 会被丢弃</td></tr>
+              <tr><td>重定向</td><td>不自动跟随，<code>3xx</code> 原样返回给你处理</td></tr>
+              <tr><td>请求体</td><td>最大 2 MB</td></tr>
+              <tr><td>响应体</td><td>最大 8 MB</td></tr>
+              <tr><td>超时</td><td>连接 20 秒，整体 30 秒</td></tr>
+              <tr><td>返回</td><td><code>{status, headers, body}</code>；多个同名响应头用换行合并</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          <code>host.http_json</code> 参数相同，直接把响应体解析成 table。响应体为空时返回
+          <code>nil</code>；解析失败会抛错。
+        </p>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            第一次访问清单里的域名时，客户端会向用户申请网络授权，被拒绝的话请求根本不会发出去。
+            这一步在 <code>call</code> 内部，所以 <code>host.http</code> 报错时先看是不是权限问题，再怀疑网络。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="crypto">
+        <div class="docs-section-head">
+          <b>20</b>
+          <span>host / CRYPTO</span>
+          <span>SIGNING</span>
+        </div>
+
+        <h2>加密与编码</h2>
+
+        <p class="docs-intro">
+          <code>host.crypto</code> 用一张 spec 表描述运算。输入统一取 <code>text</code>
+          （也接受 <code>input</code>），除特别说明外返回字符串。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>operation</th><th>额外参数</th><th>输出</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>md5</code></td><td>—</td><td>小写十六进制摘要</td></tr>
+              <tr><td><code>sha1</code></td><td>—</td><td>小写十六进制</td></tr>
+              <tr><td><code>sha256</code></td><td>—</td><td>小写十六进制</td></tr>
+              <tr><td><code>hmac</code></td><td><code>key</code>；<code>algorithm</code> = <code>sha1</code> / <code>md5</code> / 其它（默认 <code>sha256</code>）</td><td>十六进制 HMAC</td></tr>
+              <tr><td><code>base64</code></td><td>—</td><td>Base64</td></tr>
+              <tr><td><code>base64_decode</code></td><td>—</td><td>原文</td></tr>
+              <tr><td><code>xor</code></td><td><code>key</code>；<code>encoding</code> = <code>hex</code> / 其它（按 Base64 解析输入）；<code>outputEncoding</code> = <code>hex</code> / <code>utf8</code> / 其它（Base64）</td><td>按 <code>outputEncoding</code></td></tr>
+              <tr><td><code>zlib_inflate</code></td><td>—</td><td>输入按 Base64 解码后解压</td></tr>
+              <tr><td><code>zlib_deflate</code></td><td>—</td><td>压缩后 Base64</td></tr>
+              <tr><td><code>krc_decode</code></td><td>—</td><td>KRC 歌词解码</td></tr>
+              <tr><td><code>rsa_modpow</code></td><td><code>modulus</code>（十六进制）、<code>exponent</code>（默认 65537）、<code>width</code>（默认 256）、<code>reverse</code>、<code>inputEncoding</code></td><td>定宽小写十六进制</td></tr>
+              <tr><td><code>aes</code></td><td><code>key</code>；<code>mode</code> = <code>cbc</code> / 其它；<code>iv</code>（CBC 必填）；<code>decrypt</code>；<code>encoding</code> = <code>hex</code> / <code>base64</code></td><td>密文或明文</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>-- 网易云式的 weapi 参数：两次 AES + 一次 RSA
+local first  = host.crypto({ operation = "aes", mode = "cbc",
+  key = presetKey, iv = presetKey, text = text })
+local second = host.crypto({ operation = "aes", mode = "cbc",
+  key = randomKey, iv = randomIv, text = first,
+  encoding = "hex" })
+local secret = host.crypto({ operation = "rsa_modpow",
+  text = second, modulus = modulus, exponent = 65537, reverse = true })
+
+-- MD5 签名
+local sign = host.crypto({ operation = "md5", text = payload .. salt })</code></pre>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            <code>xor</code> 的 <code>key</code> 为空时原样返回输入，不做任何解码，
+            这是给线上格式随账号变化的接口留的退路，不要拿它当加密。
+            <code>zlib_*</code> 与 <code>krc_decode</code> 失败返回空字符串，不抛错。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="utils">
+        <div class="docs-section-head">
+          <b>21</b>
+          <span>host / UTILS</span>
+          <span>STRINGS &amp; TIME</span>
+        </div>
+
+        <h2>工具函数</h2>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>函数</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>host.json_encode(value)</code></td><td>编码为 JSON 字符串</td></tr>
+              <tr><td><code>host.json_decode(text)</code></td><td>解析 JSON</td></tr>
+              <tr><td><code>host.url_encode(text)</code> / <code>host.url_decode(text)</code></td><td>URL 百分号编码与解码</td></tr>
+              <tr><td><code>host.now()</code></td><td>Unix 毫秒时间戳（整数）</td></tr>
+              <tr><td><code>host.random_hex(count)</code></td><td>安全随机十六进制，<code>count</code> 1–1024，默认 16，输出长度 <code>2×count</code></td></tr>
+              <tr><td><code>host.sleep(ms)</code></td><td>异步挂起 0–60000 毫秒，适合轮询与限流</td></tr>
+              <tr><td><code>host.log(level, message, data)</code></td><td>写入宿主诊断日志；<code>level</code> 默认 <code>info</code>，消息截断到 2048 字符</td></tr>
+              <tr><td><code>host.info()</code> / <code>host.plugin_info()</code></td><td>清单、运行时类型与可用特性</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="utils-cookie">Cookie 工具</h3>
+
+        <p class="docs-prose">
+          这三个函数只做字符串处理，不发请求。客户端用它把散落的
+          <code>Set-Cookie</code> 拼成一条能直接塞进请求头的 Cookie。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>函数</th><th>行为</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>host.cookie_compact(text)</code></td><td>丢掉 <code>domain</code>、<code>path</code>、<code>expires</code>、<code>httponly</code>、<code>secure</code>、<code>samesite</code> 等属性，只留 <code>名=值</code></td></tr>
+              <tr><td><code>host.cookie_field(text, name)</code></td><td>取出某个字段的值，没有则返回 <code>nil</code></td></tr>
+              <tr><td><code>host.cookie_merge(previous, updates)</code></td><td>合并响应里的新 Cookie，保留没被覆盖的旧字段</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>local response = host.http({ url = url, method = "POST", body = form })
+local merged = host.cookie_merge(
+  host.storage_get("cookie") or "",
+  response.headers["set-cookie"]
+)
+host.storage_set("cookie", merged)</code></pre>
+        </div>
+
+        <h3 class="docs-h3" id="utils-info">host.info() 的内容</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>{
+  runtime = "native",          -- 或 "web"
+  plugin = "community.example.music",
+  name = "Example Music",
+  version = "1.0.0",
+  apiVersion = 1,
+  provider = "example",
+  capabilities = { ... },
+  auth = { ... },
+  permissions = { network = {...}, data = {...}, storage = true, ... },
+  features = { "http", "crypto", "storage", ..., "native_host_v1" },
+}</code></pre>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            <code>features</code> 是编译期常量，只说明宿主有这个接口，不代表当前平台或权限可用。
+            例如 <code>features</code> 里有 <code>filesystem</code>，你依然可能被拒绝文件权限。
+            要探测能力，用 <code>host.native()</code> 那种返回 supported 表的方式。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="storage">
+        <div class="docs-section-head">
+          <b>22</b>
+          <span>host / STORAGE</span>
+          <span>KEY-VALUE</span>
+        </div>
+
+        <h2>持久化存储</h2>
+
+        <p class="docs-intro">
+          清单里声明 <code>"storage": true</code> 之后可用。存的是任意可跨边界的数据，
+          会被 JSON 序列化后落盘，总量 1 MB。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>函数</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>host.storage_get(key)</code></td><td>取值；不存在返回 <code>nil</code></td></tr>
+              <tr><td><code>host.storage_set(key, value)</code></td><td>写入；<code>value</code> 为 <code>nil</code> 即删除该键</td></tr>
+              <tr><td><code>host.storage_keys()</code></td><td>返回已排序的键数组</td></tr>
+              <tr><td><code>host.storage_clear()</code></td><td>清空本插件的所有键</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>local key = "session." .. args.platform
+host.storage_set(key, { cookie = cookie, uid = uid, expiresAt = host.now() + 86400000 })
+
+local session = host.storage_get(key)
+if session and session.expiresAt &lt; host.now() then
+  host.storage_set(key, nil)   -- 过期即删除
+  session = nil
+end</code></pre>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            没有声明 <code>storage</code> 时，<code>storage_get</code> 与 <code>storage_keys</code>
+            静默返回 <code>nil</code> / 空表，而 <code>storage_set</code> 与 <code>storage_clear</code>
+            会抛错。写入超过 1 MB 报 <code>Storage full</code>。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="files">
+        <div class="docs-section-head">
+          <b>23</b>
+          <span>host / FILES</span>
+          <span>SANDBOXED FS</span>
+        </div>
+
+        <h2>文件沙箱</h2>
+
+        <p class="docs-intro">
+          声明 <code>"filesystem": true</code> 后，插件可以在自己的沙箱里读写文件。
+          根目录固定为插件的 <code>files</code> 目录，所有路径都是相对路径，越界与符号链接一律拒绝。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>operation</th><th>参数</th><th>返回</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>read</code></td><td><code>path</code>、<code>encoding</code></td><td>字符串 / 字节数组 / Base64</td></tr>
+              <tr><td><code>write</code></td><td><code>path</code>、<code>data</code>、<code>encoding</code></td><td><code>{path, size}</code></td></tr>
+              <tr><td><code>append</code></td><td>同上</td><td><code>{path, size}</code></td></tr>
+              <tr><td><code>exists</code></td><td><code>path</code></td><td>布尔</td></tr>
+              <tr><td><code>stat</code></td><td><code>path</code></td><td><code>{path, type, size, modifiedMs}</code> 或 <code>nil</code></td></tr>
+              <tr><td><code>list</code></td><td><code>path</code>（可为空表示根）</td><td><code>[{name, path, type, size}]</code></td></tr>
+              <tr><td><code>mkdir</code></td><td><code>path</code></td><td><code>true</code></td></tr>
+              <tr><td><code>delete</code></td><td><code>path</code>、<code>recursive</code></td><td>删除成功 <code>true</code>，目标不存在 <code>false</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>encoding</th><th>读</th><th>写</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>"binary"</code></td><td>字节数组（0–255 的整数表）</td><td>按默认文本处理</td></tr>
+              <tr><td><code>"base64"</code></td><td>Base64 字符串</td><td>先解码再写入</td></tr>
+              <tr><td>缺省</td><td>UTF-8 文本</td><td>UTF-8 文本，或 0–255 整数数组</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>host.file({ operation = "mkdir", path = "cache" })
+host.file({ operation = "write", path = "cache/state.json",
+  data = host.json_encode({ version = 2 }) })
+
+local state = host.json_decode(
+  host.file({ operation = "read", path = "cache/state.json" }))
+
+for _, entry in ipairs(host.file({ operation = "list", path = "cache" })) do
+  host.log("debug", "cached", { path = entry.path, size = entry.size })
+end</code></pre>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            单文件 4 MB、插件总量 16 MB、目录项最多 2048 个。<code>delete</code>
+            默认只删除空目录，要删目录连同内容必须显式传 <code>recursive = true</code>。
+            Web 端的 <code>stat.modifiedMs</code> 恒为 0，别用它判断文件新旧。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="resources">
+        <div class="docs-section-head">
+          <b>24</b>
+          <span>host / RESOURCES</span>
+          <span>READ-ONLY BUNDLE</span>
+        </div>
+
+        <h2>包内资源</h2>
+
+        <p class="docs-intro">
+          随包携带的文本文件可以直接读出来，不需要文件权限。只读、只在本包内、安装时已载入内存。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>函数</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>host.resource(path)</code></td><td>读取资源文本；不存在返回 <code>nil</code></td></tr>
+              <tr><td><code>host.read_resource(path)</code></td><td>同上（别名）</td></tr>
+              <tr><td><code>host.resource_keys()</code></td><td>列出所有资源路径，升序</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>-- data/keys.json 随包携带，用来放公钥或固定表
+local keys = host.json_decode(host.resource("data/keys.json") or "{}")
+
+-- frontend/ 里的 HTML/CSS/JS 也是资源
+local page = host.resource("frontend/index.html")</code></pre>
+        </div>
+
+        <p class="docs-prose">
+          可读的类型是 <code>.json</code>、<code>.md</code>、<code>.txt</code>、<code>.html</code>、
+          <code>.css</code>、<code>.js</code>、<code>.svg</code>。路径必须是安全相对路径，
+          且大小写要与 ZIP 内一致。
+        </p>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            宿主不会执行这些 JavaScript，也不会因此获得宿主文件系统访问权限。
+            把前端页面放进包里只是让插件把它读出来发给外部浏览器或 WebSocket 客户端。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="timer">
+        <div class="docs-section-head">
+          <b>25</b>
+          <span>host / TIMER</span>
+          <span>PERIODIC</span>
+        </div>
+
+        <h2>计时器</h2>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>host.timer({ id = "poll", intervalMs = 200 })     -- 注册，返回 true
+host.timer({ operation = "list" })                 -- 当前 id 数组
+host.timer({ operation = "cancel", id = "poll" })  -- 取消
+
+-- 周期回调以 call 的形式回到插件
+if operation == "timer" and args.id == "poll" then
+  drainSocket()
+  return true
+end</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>规则</th><th>数值</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>周期</td><td class="is-num">100–60000 ms</td></tr>
+              <tr><td>每个插件上限</td><td class="is-num">4 个</td></tr>
+              <tr><td>同时在途的回调</td><td class="is-num">4 个</td></tr>
+              <tr><td>回调堆积</td><td>同一个 id 已有回调在跑时，本次 tick 直接丢弃，不排队</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            tick 会被合并丢弃，所以不要指望「每秒恰好一次」。需要累积计数就用
+            <code>host.now()</code> 计算真实间隔。不要在回调里写死循环，它和普通调用共享同一份指令预算。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="player">
+        <div class="docs-section-head">
+          <b>26</b>
+          <span>host / PLAYER</span>
+          <span>CONTROL</span>
+        </div>
+
+        <h2>播放器控制</h2>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>host.player_control({ command = "play" })
+host.player_control({ command = "seek", positionMs = 30000 })
+host.player_control({ command = "volume", volume = 0.8 })
+host.player_control({ command = "repeat", mode = "all" })
+host.player_control({ command = "shuffle", enabled = true })
+
+local state = host.player_state()      -- 播放状态
+local queue = host.player_queue()      -- 队列
+local track = host.player_track()      -- 当前歌曲，可能为 nil
+local lyrics = host.player_lyrics()    -- 当前歌词
+local recent = host.player_recent()    -- 最近播放（需要 history 权限）</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>command</th><th>参数</th><th>返回</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>play</code> / <code>pause</code> / <code>stop</code> / <code>toggle</code> / <code>next</code> / <code>prev</code></td><td>—</td><td><code>true</code></td></tr>
+              <tr><td><code>seek</code></td><td><code>positionMs</code> 或 <code>fraction</code>（0–1）</td><td><code>true</code> / <code>false</code></td></tr>
+              <tr><td><code>volume</code></td><td><code>volume</code>（限制在 0–1）</td><td><code>true</code> / <code>false</code></td></tr>
+              <tr><td><code>play_index</code></td><td><code>index</code></td><td><code>true</code> / <code>false</code>（越界）</td></tr>
+              <tr><td><code>shuffle</code></td><td><code>enabled</code></td><td><code>{shuffle, repeat}</code></td></tr>
+              <tr><td><code>repeat</code></td><td><code>mode</code> = <code>off</code> / <code>all</code> / <code>one</code></td><td><code>{shuffle, repeat}</code></td></tr>
+              <tr><td><code>status</code></td><td>—</td><td>播放状态表</td></tr>
+              <tr><td><code>queue</code></td><td>—</td><td><code>{index, currentIndex, length, revision, shuffle, repeat, tracks}</code></td></tr>
+              <tr><td><code>track</code></td><td>—</td><td>当前歌曲表或 <code>nil</code></td></tr>
+              <tr><td><code>lyrics</code></td><td>—</td><td><code>{loading, pureMusic, imported, lines = [{text, time, startTime, ...}]}</code></td></tr>
+              <tr><td><code>recent</code></td><td>—</td><td>最近播放数组（最多 100 条）</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          播放状态表包含 <code>state</code>、<code>positionMs</code>、<code>durationMs</code>、
+          <code>volume</code>、<code>bufferedPositionMs</code>、<code>audioReady</code>、
+          <code>queueIndex</code>、<code>queueLength</code>、<code>shuffle</code>、<code>repeat</code>
+          与 <code>track</code>。
+        </p>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            <code>host.player_state()</code> 失败时返回空表 <code>{}</code>，
+            <code>player_track()</code> 返回 <code>nil</code>。用 <code>if track then</code> 判断，
+            不要直接索引字段，没在播放时就是空的。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="data-access">
+        <div class="docs-section-head">
+          <b>27</b>
+          <span>host / DATA</span>
+          <span>PERMISSIONED</span>
+        </div>
+
+        <h2>资料库与账号</h2>
+
+        <p class="docs-intro">
+          这几个接口读的是客户端本地的资料，要先声明数据权限、由用户同意。
+          它们跟音乐平台的后端没关系，插件可以用它们做一个把当前播放同步到别处的桥。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>函数</th><th>权限</th><th>operation</th></tr>
+            </thead>
+            <tbody>
+              <tr><td rowspan="5"><code>host.library(spec)</code></td><td rowspan="5"><code>library</code></td><td><code>playlists</code>（默认）</td></tr>
+              <tr><td><code>tracks</code>：<code>id</code> 指定的歌单曲目</td></tr>
+              <tr><td><code>album</code>：<code>id</code> 指定的专辑曲目</td></tr>
+              <tr><td><code>local</code>：本地音乐条目</td></tr>
+              <tr><td><code>play</code>：<code>kind</code> = <code>song</code> / <code>album</code> / <code>playlist</code>，<code>id</code>、<code>index</code></td></tr>
+              <tr><td><code>host.search(spec)</code></td><td><code>library</code></td><td><code>query</code>（1–256 字符），返回 <code>{tracks, playlists, albums, artists}</code></td></tr>
+              <tr><td rowspan="3"><code>host.user(spec)</code></td><td><code>profile</code></td><td><code>profile</code>（默认）、<code>platforms</code></td></tr>
+              <tr><td><code>history</code></td><td><code>statistics</code>：<code>range</code> = <code>today</code> / <code>last7Days</code> / <code>last30Days</code> / <code>allTime</code></td></tr>
+              <tr><td>—</td><td>—</td></tr>
+              <tr><td><code>host.permissions()</code></td><td>—</td><td>返回 <code>{declared = {...}, granted = {...}}</code></td></tr>
+              <tr><td><code>host.request_permission(scope)</code></td><td>—</td><td>返回布尔值；未声明的 scope 直接 <code>false</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>-- 在用户点击按钮之后申请，不要在启动阶段申请
+if not host.request_permission("library") then
+  return { error = { code = 403 } }
+end
+
+local lists = host.library({ operation = "playlists", limit = 50, offset = 0 })
+for _, item in ipairs(lists.items) do
+  host.log("debug", "playlist", { name = item.name, count = item.trackCount })
+end
+
+local stats = host.user({ operation = "statistics", range = "last7Days" })</code></pre>
+        </div>
+
+        <p class="docs-prose">
+          分页结果统一是 <code>{items, offset, limit, total, hasMore}</code>，<code>offset</code>
+          从 0 开始，<code>limit</code> 默认 50、上限 200。数据权限被拒绝时抛
+          <code>Plugin data permission denied</code>（code 403）。
+        </p>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            账号 Cookie、密码、令牌、可播放音源 URL 和本地文件路径都不会通过这些接口导出。
+            本地文件封面也不会暴露绝对路径。
+          </p>
+        </div>
+
+        <h3 class="docs-h3" id="data-native">原生能力</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>local caps = host.native()   -- 等价于 { operation = "capabilities" }
+if caps.operations["audio.status"].supported then
+  local ok, result = pcall(host.native, { operation = "audio.status" })
+  if ok and result.ok then
+    -- result.data.source / result.data.output / result.data.metrics
+  end
+end</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>operation</th><th>权限</th><th>返回 data</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>capabilities</code></td><td>—</td><td><code>{version, platform, operations, desktopLyrics}</code></td></tr>
+              <tr><td><code>audio.status</code></td><td><code>native_audio</code></td><td>引擎、流状态、格式、缓冲与欠载指标</td></tr>
+              <tr><td><code>audio.devices</code></td><td><code>native_audio</code></td><td>最多 64 项设备摘要</td></tr>
+              <tr><td><code>lyrics.status</code></td><td><code>native_control</code></td><td>桌面/悬浮歌词的开关、锁定、行数</td></tr>
+              <tr><td><code>lyrics.configure</code></td><td><code>native_control</code></td><td>校验并应用后返回同 <code>lyrics.status</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          <code>host.native</code> 是唯一不抛错的宿主接口：不支持时返回
+          <code>{ok = false, supported = false, error = {code = "..."}}</code>，
+          参数错误返回 <code>invalid_argument</code>，而不是抛异常。
+        </p>
+      </section>
+
+      <section class="docs-section" id="connections">
+        <div class="docs-section-head">
+          <b>28</b>
+          <span>host / CONNECTIONS</span>
+          <span>TCP · WS</span>
+        </div>
+
+        <h2>连接与服务端</h2>
+
+        <p class="docs-intro">
+          除了 HTTP，插件还能开 TCP socket、WebSocket 连接，甚至在本机监听端口。
+          自建服务、外部前端、本地桥都走这条路。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>接口</th><th>清单权限</th><th>运行时授权</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>host.socket</code></td><td><code>permissions.socket</code>（省略时回退 <code>network</code>）</td><td><code>socket</code></td></tr>
+              <tr><td><code>host.socket_server</code></td><td><code>permissions.socketServer</code></td><td><code>socketServer</code></td></tr>
+              <tr><td><code>host.websocket</code></td><td><code>permissions.websocket</code>（<code>ws</code> / <code>wss</code>）</td><td><code>websocket</code></td></tr>
+              <tr><td><code>host.websocket_server</code></td><td><code>permissions.websocketServer</code></td><td><code>websocketServer</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="connections-ws">WebSocket 客户端与服务端</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>-- manifest: "permissions": { "websocketServer": ["127.0.0.1:11444"] }
+local listener = host.websocket_server({
+  operation = "listen", id = "lyrics", host = "127.0.0.1",
+  port = 11444, path = "/lyrics",
+})
+
+local client = host.websocket_server({ operation = "accept", id = "lyrics", timeoutMs = 0 })
+if client then
+  host.websocket_server({ operation = "send", id = "lyrics",
+    clientId = client.clientId, data = host.json_encode({ type = "hello" }) })
+end</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>服务端 operation</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>listen</code></td><td>返回 <code>{id, host, port}</code>；<code>port = 0</code> 时由系统分配并返回实际端口</td></tr>
+              <tr><td><code>accept</code></td><td>返回 <code>{clientId, address}</code> 或 <code>nil</code>（超时）</td></tr>
+              <tr><td><code>clients</code></td><td>当前客户端 ID 数组</td></tr>
+              <tr><td><code>send</code> / <code>receive</code></td><td>用 <code>clientId</code> 指定连接</td></tr>
+              <tr><td><code>broadcast</code></td><td>返回本次收到的客户端数量</td></tr>
+              <tr><td><code>close_client</code> / <code>close</code></td><td>关闭单个连接 / 关闭服务端</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>限制</th><th>数值</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>每个插件的服务端</td><td class="is-num">4 个</td></tr>
+              <tr><td>每个服务端的客户端</td><td class="is-num">32 个</td></tr>
+              <tr><td>主动连接（socket / websocket）</td><td class="is-num">16 个</td></tr>
+              <tr><td>单条消息</td><td class="is-num">1 MB</td></tr>
+              <tr><td>单连接接收队列</td><td class="is-num">128 条 / 4 MB</td></tr>
+              <tr><td>接收超时 <code>timeoutMs</code></td><td class="is-num">0–30000 ms，默认 30000</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            <code>timeoutMs = 0</code> 只检查已到达的数据，立即返回，在计时器里轮询时用它，
+            免得长时间占住串行队列。<code>accept</code> 与 <code>receive</code> 超时返回 <code>nil</code>，
+            不抛错，也不会关闭连接。
+          </p>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            浏览器不能监听 TCP 端口：Web 端的 <code>host.websocket_server</code> 恒定报不支持，
+            <code>host.socket</code> 则完全不存在。用 <code>host.info().features</code>
+            里的 <code>socket</code> 判断当前端是否可用。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="settings">
+        <div class="docs-section-head">
+          <b>29</b>
+          <span>界面 / SETTINGS</span>
+          <span>DATA-ONLY CONTROLS</span>
+        </div>
+
+        <h2>设置项</h2>
+
+        <p class="docs-intro">
+          插件可以在设置页里加自己的控件。提交的是数据，控件由宿主创建；
+          它拿不到 Widget，也接管不了输入、焦点和无障碍树。
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>local quality = host.add_setting({
+  id = "quality",              -- [a-zA-Z0-9_.-]{1,64}
+  type = "select",             -- toggle / select / text / number / action
+  title = "音质",              -- ≤ 120，必填
+  subtitle = "选择播放音质",    -- ≤ 240
+  default = "standard",
+  options = {
+    { value = "standard", label = "标准" },
+    { value = "high", label = "高" },
+    { value = "lossless", label = "无损" },
+  },
+})
+-- quality 是宿主持久化后的当前值</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>type</th><th>别名</th><th>专属字段</th><th>值类型</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>toggle</code></td><td><code>switch</code>、<code>boolean</code></td><td>—</td><td>布尔，默认 <code>false</code></td></tr>
+              <tr><td><code>select</code></td><td><code>choice</code></td><td><code>options</code>（1–32 项，<code>value</code> ≤128 且唯一，<code>label</code> ≤120）</td><td>必须是某个 option 的 <code>value</code></td></tr>
+              <tr><td><code>text</code></td><td><code>string</code></td><td>—</td><td>字符串，≤ 2048 字符</td></tr>
+              <tr><td><code>number</code></td><td><code>slider</code></td><td><code>min</code>、<code>max</code>、<code>step</code>（需满足 <code>max &gt; min</code>、<code>0 &lt; step ≤ max − min</code>）</td><td>区间内的数字</td></tr>
+              <tr><td><code>action</code></td><td><code>button</code></td><td>—</td><td>不保存值</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          每个插件最多 64 个设置项，重复的 <code>id</code> 会更新已有项而不是新增。
+          <code>add_setting</code> 的返回值就是当前值，宿主已经把用户上次的选择读回来了，
+          你不需要自己再存一份。
+        </p>
+
+        <h3 class="docs-h3" id="settings-events">接收变化</h3>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>if operation == "setting_changed" then
+  -- args.id / args.value；action 类型的 value 为 nil
+  if args.id == "quality" then
+    currentQuality = args.value
+  end
+  return true
+end</code></pre>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            设置值由宿主持久化，你也拿不到「尚未保存」的中间态。
+            <code>action</code> 类设置不保存任何值，它的变化同样以
+            <code>setting_changed</code> 送达，<code>value</code> 为 <code>nil</code>。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="menu">
+        <div class="docs-section-head">
+          <b>30</b>
+          <span>界面 / MENU</span>
+          <span>NOW PLAYING</span>
+        </div>
+
+        <h2>播放器菜单</h2>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>host.add_player_menu_item({
+  id = "copy_id",
+  label = "复制歌曲 ID",       -- ≤ 120
+  subtitle = "写入剪贴板",      -- ≤ 180
+  icon = "content_copy",       -- Material 图标名，≤ 40
+})
+
+if operation == "player_menu" then
+  -- args.id 是菜单项 ID，args.track 是当前歌曲
+  if args.id == "copy_id" then
+    copyToClipboard(args.track.id)
+  end
+  return true
+end</code></pre>
+        </div>
+
+        <p class="docs-prose">
+          菜单项出现在正在播放页右上角的「三个点」里，每个插件最多 32 项。
+          <code>icon</code> 用有限的 Material 图标名，不认识的名字会显示通用的扩展图标。
+          插件页面和菜单项只有在插件启用且启动成功时才出现。
+        </p>
+      </section>
+
+      <section class="docs-section" id="pages">
+        <div class="docs-section-head">
+          <b>31</b>
+          <span>界面 / PAGES</span>
+          <span>DECLARATIVE</span>
+        </div>
+
+        <h2>插件页面</h2>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>host.add_page({
+  id = "tools",
+  title = "工具",
+  subtitle = "插件工具页",
+  icon = "settings",
+  elements = {
+    { type = "section", title = "常用操作" },
+    { type = "text", text = "这段说明由宿主渲染。" },
+    { type = "toggle", id = "enabled", title = "启用功能", value = true },
+    { type = "select", id = "mode", title = "模式", value = "a",
+      options = { { value = "a", label = "模式 A" }, { value = "b", label = "模式 B" } } },
+    { type = "slider", id = "volume", title = "强度", min = 0, max = 100, step = 5, value = 50 },
+    { type = "text_field", id = "query", title = "关键词", placeholder = "输入关键词" },
+    { type = "button", id = "refresh", title = "刷新", icon = "refresh" },
+  },
+})</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>type</th><th>别名</th><th>需要 id</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>text</code></td><td><code>label</code></td><td>否</td><td>纯文本，<code>text</code> ≤ 4000 字符</td></tr>
+              <tr><td><code>section</code></td><td><code>heading</code></td><td>否</td><td>分组标题</td></tr>
+              <tr><td><code>divider</code></td><td>—</td><td>否</td><td>分隔线</td></tr>
+              <tr><td><code>spacer</code></td><td>—</td><td>否</td><td>空白间距</td></tr>
+              <tr><td><code>button</code></td><td><code>action</code></td><td>是</td><td>点击后送回 <code>page_event</code></td></tr>
+              <tr><td><code>toggle</code></td><td><code>switch</code>、<code>boolean</code></td><td>是</td><td>布尔值</td></tr>
+              <tr><td><code>select</code></td><td><code>choice</code></td><td>是</td><td>1–32 个选项</td></tr>
+              <tr><td><code>slider</code></td><td><code>number</code></td><td>是</td><td><code>min</code> / <code>max</code> / <code>step</code></td></tr>
+              <tr><td><code>text_field</code></td><td><code>textfield</code>、<code>input</code></td><td>是</td><td><code>maxLines</code> 1–12，默认 4</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>元素字段</th><th>限制</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>id</code></td><td><code>^[a-zA-Z0-9_.-]{1,64}$</code>，同一页内不能重复</td></tr>
+              <tr><td><code>title</code> / <code>label</code></td><td>≤ 120；交互型元素必填</td></tr>
+              <tr><td><code>subtitle</code> / <code>description</code></td><td>≤ 240</td></tr>
+              <tr><td><code>text</code> / <code>content</code></td><td>≤ 4000</td></tr>
+              <tr><td><code>icon</code></td><td>≤ 40</td></tr>
+              <tr><td><code>placeholder</code></td><td>≤ 120</td></tr>
+              <tr><td><code>value</code></td><td>按类型校验：toggle 布尔、select 必须是某个 option、slider 在区间内、text_field ≤ 2048 字符</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>上限</th><th>数值</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>每个插件的页面</td><td class="is-num">16</td></tr>
+              <tr><td>每页的控件</td><td class="is-num">128</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>if operation == "page_event" then
+  -- args.page / args.id / args.value
+  if args.page == "tools" and args.id == "refresh" then
+    reload()
+  end
+  return true
+end</code></pre>
+        </div>
+      </section>
+
+      <section class="docs-section" id="layout">
+        <div class="docs-section-head">
+          <b>32</b>
+          <span>界面 / LAYOUT</span>
+          <span>RUNTIME EDITS</span>
+        </div>
+
+        <h2>页面几何与编辑</h2>
+
+        <p class="docs-intro">
+          页面注册之后仍然可以在运行时改写：换标题、调间距、插入或删除控件。
+          所有编辑都提交纯数据，由宿主校验后写入界面，且只作用于该插件自己的页面。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>接口</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>host.page(id)</code></td><td>读取页面当前描述 <code>{id, title, subtitle, icon, layout, elements}</code></td></tr>
+              <tr><td><code>host.pages()</code></td><td>列出本插件页面的概要，<code>elements</code> 是控件数量</td></tr>
+              <tr><td><code>host.update_page(spec)</code></td><td>改写标题、副标题、图标与布局</td></tr>
+              <tr><td><code>host.set_page_elements(spec)</code></td><td>整体替换控件列表；<code>elements = {}</code> 清空页面</td></tr>
+              <tr><td><code>host.add_page_element(spec)</code></td><td>新建控件；用 <code>at</code>、<code>before</code>、<code>after</code> 定位，缺省追加</td></tr>
+              <tr><td><code>host.update_page_element(spec)</code></td><td>按 <code>element</code> / <code>id</code> / <code>index</code> 局部改写；未提交的字段保持原样</td></tr>
+              <tr><td><code>host.remove_page_element(spec)</code></td><td>删除控件</td></tr>
+              <tr><td><code>host.move_page_element(spec)</code></td><td>调整顺序；<code>to</code> 是目标位置（从 1 起）或目标控件 ID</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>host.update_page({
+  page = "tools",
+  title = "工具箱",
+  gap = 18,            -- 控件之间的间隙，0–96
+  inset = 14,          -- 页面左右内边距，0–96
+  maxWidth = 720,      -- 内容宽度上限，0 表示跟随应用布局，上限 2400
+  align = "center",    -- start / center / end / stretch
+  direction = "grid",  -- vertical / horizontal / grid
+  columns = 2,         -- grid 列数 1–4
+  card = true,         -- 是否保留分组卡片外观
+  header = true,       -- 是否保留标题与副标题
+})
+
+host.add_page_element({ page = "tools", before = "refresh", type = "toggle",
+  id = "auto_sync", title = "自动同步", value = true })
+
+host.update_page_element({ page = "tools", id = "auto_sync", title = "自动同步收藏" })
+host.move_page_element({ page = "tools", element = "auto_sync", to = 1 })
+host.remove_page_element({ page = "tools", element = "auto_sync" })
+
+-- 读取宿主侧的真实状态，再决定下一次编辑
+local page = host.page("tools")
+local count = #page.elements</code></pre>
+        </div>
+
+        <p class="docs-prose">
+          布局键既可以平铺在 spec 顶层，也可以写成嵌套的 <code>layout = { ... }</code>。
+          数值会被限制在允许范围内，无法识别的 <code>align</code>、<code>direction</code>
+          或控件字段会直接报错，不会被静默忽略。
+        </p>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            <code>update_page_element</code> 只覆盖你传入的字段。用户已经拨好的开关和滑块值
+            不会因为你改了一句文案就丢失。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="theme">
+        <div class="docs-section-head">
+          <b>33</b>
+          <span>界面 / THEME</span>
+          <span>TOKENS ONLY</span>
+        </div>
+
+        <h2>主题与布局令牌</h2>
+
+        <p class="docs-intro">
+          插件能换皮，换的只是一组数值和字重，没有 Widget 树。
+          页面、焦点、语义树和输入始终归宿主；未知字段忽略，越界数值回退到允许范围。
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>if operation == "describe" then
+  return { providers = { ... }, theme = true }   -- 声明后再实现 theme 操作
+end
+
+if operation == "theme" then
+  return {
+    theme = {
+      id = "example.dark",
+      name = "Example Dark",
+      elements = {
+        groupedCardRadius = 18,
+        listTileMinHeight = 52,
+        pageTitleCompactSize = 36,
+        displayWeight = 800,
+        titleWeight = 700,
+        lyricWeight = 500,
+        lyricLineHeight = 1.55,
+        lyricTranslationGap = 6,
+        lyricSpringStiffnessScale = 1.1,
+        lyricStaggerDelay = 0.04,
+      },
+    },
+    layout = {
+      id = "example.compact",
+      name = "Example Compact",
+      compactInset = 18,
+      regularInset = 28,
+      maxContentWidth = 1080,
+    },
+  }
+end</code></pre>
+        </div>
+
+        <h3 class="docs-h3" id="theme-tokens">主题令牌</h3>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>令牌</th><th>默认</th><th>范围</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>groupedCardRadius</code></td><td class="is-num">14</td><td>0–40</td></tr>
+              <tr><td><code>listTileMinHeight</code></td><td class="is-num">50</td><td>0–160</td></tr>
+              <tr><td><code>listTileVerticalPadding</code></td><td class="is-num">11</td><td>0–48</td></tr>
+              <tr><td><code>pageTitleCompactSize</code> / <code>pageTitleRegularSize</code></td><td class="is-num">34 / 32</td><td>0–72</td></tr>
+              <tr><td><code>sectionHeaderSize</code></td><td class="is-num">20</td><td>0–48</td></tr>
+              <tr><td><code>controlRadius</code></td><td class="is-num">12</td><td>0–40</td></tr>
+              <tr><td><code>glassBlurSigma</code></td><td class="is-num">16</td><td>0–48</td></tr>
+              <tr><td><code>displayWeight</code> / <code>headingWeight</code></td><td class="is-num">700</td><td>100–900</td></tr>
+              <tr><td><code>titleWeight</code> / <code>labelWeight</code></td><td class="is-num">600 / 500</td><td>100–900</td></tr>
+              <tr><td><code>bodyWeight</code></td><td class="is-num">400</td><td>100–900</td></tr>
+              <tr><td><code>lyricWeight</code> / <code>lyricTranslationWeight</code></td><td>跟随主题</td><td>100–900</td></tr>
+              <tr><td><code>lyricFontScale</code></td><td class="is-num">1</td><td>0.5–2</td></tr>
+              <tr><td><code>lyricTranslationScale</code></td><td class="is-num">0.73</td><td>0.4–1.5</td></tr>
+              <tr><td><code>lyricLineHeight</code> / <code>lyricTranslationLineHeight</code></td><td class="is-num">1.5 / 1.45</td><td>0.8–3</td></tr>
+              <tr><td><code>lyricTranslationGap</code></td><td class="is-num">5</td><td>0–48</td></tr>
+              <tr><td><code>lyricDimAlpha</code> / <code>lyricTranslationAlpha</code></td><td class="is-num">0.48 / 0.58</td><td>0–1</td></tr>
+              <tr><td><code>lyricTextAlign</code></td><td class="is-num">start</td><td>start / center / end / justify</td></tr>
+              <tr><td><code>lyricSpringMassScale</code>、<code>lyricSpringStiffnessScale</code>、<code>lyricSpringDampingScale</code></td><td class="is-num">1</td><td>0.25–4</td></tr>
+              <tr><td><code>lyricStaggerDelay</code></td><td class="is-num">0.05</td><td>0–0.5</td></tr>
+              <tr><td><code>lyricStaggerDecay</code></td><td class="is-num">1.05</td><td>1–2</td></tr>
+              <tr><td><code>lyricFocusScaleDelta</code></td><td class="is-num">3</td><td>0.5–20</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="theme-layout">布局令牌</h3>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>令牌</th><th>默认</th><th>范围</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>compactInset</code></td><td class="is-num">16</td><td>0–80</td></tr>
+              <tr><td><code>regularInset</code></td><td class="is-num">24</td><td>0–120</td></tr>
+              <tr><td><code>tvInsetFactor</code></td><td class="is-num">0.043</td><td>0–0.25</td></tr>
+              <tr><td><code>maxContentWidth</code></td><td class="is-num">1180</td><td>0–3000</td></tr>
+              <tr><td><code>tvMaxContentWidth</code></td><td class="is-num">1560</td><td>0–4000</td></tr>
+              <tr><td><code>tabletBreakpoint</code></td><td class="is-num">700</td><td>320–1600</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            皮肤出错只会被忽略，不会让音乐平台启动失败，也就是说令牌名写错时不会有报错，只是没有效果。
+            改完对着上表核一遍拼写。皮肤同样接管不了焦点、语义树、输入或权限。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="events">
+        <div class="docs-section-head">
+          <b>34</b>
+          <span>界面 / EVENTS</span>
+          <span>CALLBACKS</span>
+        </div>
+
+        <h2>事件回调</h2>
+
+        <p class="docs-intro">
+          宿主主动触发的调用同样走 <code>call</code>，只是 <code>args</code> 的形状不同。
+          它们不带 <code>args.platform</code>，需要区分平台时自己从会话里取。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>operation</th><th>args</th><th>触发时机</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>setting_changed</code></td><td><code>id</code>、<code>value</code></td><td>用户改了设置项</td></tr>
+              <tr><td><code>page_event</code></td><td><code>page</code>、<code>id</code>、<code>value</code></td><td>用户操作了插件页面上的控件</td></tr>
+              <tr><td><code>player_menu</code></td><td><code>id</code>、<code>track</code></td><td>用户点了正在播放页的菜单项</td></tr>
+              <tr><td><code>player_event</code></td><td><code>type</code> = <code>track</code> / <code>queue</code> / <code>lyric</code> / <code>status</code></td><td>切歌、队列变化、歌词更新、播放状态变化</td></tr>
+              <tr><td><code>timer</code></td><td><code>id</code></td><td>计时器周期到达</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>if operation == "player_event" then
+  if args.type == "track" then
+    pushNowPlaying(host.player_track())
+  elseif args.type == "status" then
+    pushStatus(host.player_state())
+  end
+  return true
+end</code></pre>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            <code>player_events</code> 要在<strong>清单</strong>的 <code>capabilities</code> 里声明，
+            且按精确字符串匹配（<code>player_events</code> 或 <code>player-events</code>），写进 <code>describe</code> 不算数。
+            <code>track</code> 类事件一次播放可能触发好几次（seek、切歌、恢复），
+            别在回调里做重活，它跟播放请求共用同一条串行队列。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="permissions">
+        <div class="docs-section-head">
+          <b>35</b>
+          <span>权限 / DECLARATION</span>
+          <span>LEAST PRIVILEGE</span>
+        </div>
+
+        <h2>权限清单</h2>
+
+        <p class="docs-intro">
+          权限写两遍：先在 <code>manifest.json</code> 里声明范围，再由用户在插件管理里逐项同意。
+          声明不等于授权，未声明的权限连弹窗都不会出现。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>键</th><th>类型</th><th>上限</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>network</code></td><td>字符串数组</td><td class="is-num">32</td><td><code>host.http</code> 的目标主机</td></tr>
+              <tr><td><code>socket</code></td><td>字符串数组</td><td class="is-num">32</td><td>TCP 连接目标；为空时回退 <code>network</code></td></tr>
+              <tr><td><code>socketServer</code></td><td><code>host:port</code> 数组</td><td class="is-num">16</td><td>TCP 监听地址</td></tr>
+              <tr><td><code>websocket</code></td><td>字符串数组</td><td class="is-num">32</td><td>WebSocket 连接目标</td></tr>
+              <tr><td><code>websocketServer</code></td><td><code>host:port</code> 数组</td><td class="is-num">16</td><td>WebSocket 监听地址</td></tr>
+              <tr><td><code>storage</code></td><td>布尔</td><td>—</td><td>键值存储</td></tr>
+              <tr><td><code>filesystem</code></td><td>布尔</td><td>—</td><td>文件沙箱；也接受 <code>files</code> / <code>file</code> 别名</td></tr>
+              <tr><td><code>data</code></td><td>字符串数组</td><td class="is-num">5</td><td>本地资料权限，见下</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="permissions-data">数据权限</h3>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>scope</th><th>可读取的内容</th><th>界面文案</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>library</code></td><td>歌单、指定歌单/专辑曲目、本地音乐条目、搜索、按目录 ID 播放</td><td>歌单与音乐库</td></tr>
+              <tr><td><code>profile</code></td><td>已连接平台与能力、当前平台、账号原始 ID、昵称、头像</td><td>平台与账号资料</td></tr>
+              <tr><td><code>history</code></td><td>最近播放、播放次数、跳过次数、收听时长</td><td>播放记录与统计</td></tr>
+              <tr><td><code>native_audio</code></td><td>原生音频格式、输出条件、缓冲与欠载指标、设备名称摘要</td><td>原生音频诊断与设备摘要</td></tr>
+              <tr><td><code>native_control</code></td><td>桌面/悬浮歌词的开关、锁定与显示行数</td><td>桌面与悬浮歌词控制</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="json">
+          <pre><code>"permissions": {
+  "network": ["api.example.com", "*.example-cdn.com"],
+  "socket": ["127.0.0.1:9000"],
+  "socketServer": ["127.0.0.1:0"],
+  "websocket": ["socket.example.com"],
+  "websocketServer": ["127.0.0.1:11444"],
+  "storage": true,
+  "filesystem": true,
+  "data": ["library", "profile"]
+}</code></pre>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            监听地址必须是明确的 IP 或 <code>localhost</code>，不支持通配域名。
+            写 <code>127.0.0.1:0</code> 表示允许系统分配临时端口，调用时也要传
+            <code>port = 0</code>。<code>socketServer</code> 为空时回退到
+            <code>websocketServer</code> 的声明。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="grants">
+        <div class="docs-section-head">
+          <b>36</b>
+          <span>权限 / GRANTS</span>
+          <span>RUNTIME CONSENT</span>
+        </div>
+
+        <h2>授权与撤销</h2>
+
+        <p class="docs-intro">
+          授权按插件存储，用户在插件详情里可以逐项撤销。撤销不需要重启插件，
+          正在加载但尚未返回 Lua 的私密数据也会被丢弃。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>时机</th><th>行为</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>插件更新</td><td>重新申请全部权限</td></tr>
+              <tr><td>首次访问某域名</td><td>弹出网络授权；拒绝后请求不会发出</td></tr>
+              <tr><td>首次调用数据接口</td><td>触发对应的数据权限申请；拒绝则抛错</td></tr>
+              <tr><td>用户撤销</td><td>下一次调用立即失败；进行中的请求结果被丢弃</td></tr>
+              <tr><td>停用或卸载</td><td>关闭该插件所有的连接与监听端口</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>-- 主动申请：用户拒绝时返回 false，不抛错
+if not host.request_permission("library") then
+  return { error = { code = 403 } }
+end
+
+-- 查看当前状态
+local state = host.permissions()
+-- state.declared = { "library", "profile" }
+-- state.granted  = { "library" }</code></pre>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            不要在插件启动或 <code>describe</code> 阶段申请数据权限：安装探测阶段没有宿主资料接口，
+            而且一装好就弹窗的用户体验很差。等到用户点了按钮、菜单项或外部前端发来明确请求时再申请。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="market">
+        <div class="docs-section-head">
+          <b>37</b>
+          <span>发布 / MARKET</span>
+          <span>PLUGINS.JSON</span>
+        </div>
+
+        <h2>上架市场</h2>
+
+        <p class="docs-intro">
+          客户端不内置插件目录，它直接读市场清单：<code>https://lazer.naominet.dev/plugin/plugins.json</code>。
+          加一个插件就是往里的 <code>plugins</code> 数组追加一项。
+        </p>
+
+        <div class="code-block" data-lang="json">
+          <pre><code>{
+  "id": "community.example.music",
+  "name": { "zh-CN": "示例音乐", "en": "Example Music" },
+  "summary": { "zh-CN": "把示例音乐接进播放器" },
+  "author": "YOUR NAME",
+  "type": "open-source",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repo": "https://github.com/OWNER/REPO",
+  "download": "https://lazer.naominet.dev/plugin/YOUR_NAME/community.example.music/1.0.0/community.example.music.zip",
+  "homepage": "https://github.com/OWNER/REPO",
+  "platforms": ["windows", "macos", "linux", "android"],
+  "tags": ["music", "streaming"],
+  "minAppVersion": "2.0.0",
+  "updatedAt": "2026-11-23"
+}</code></pre>
+        </div>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>字段</th><th>必填</th><th>校验</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>是</td><td><code>^[a-z][a-z0-9_.-]{2,79}$</code>，全局唯一，必须与 ZIP 内清单一致</td></tr>
+              <tr><td><code>name</code> / <code>summary</code></td><td>是</td><td>字符串，或 <code>{ "zh-CN": "...", "en": "..." }</code> 映射</td></tr>
+              <tr><td><code>author</code></td><td>是</td><td>作者或团队名</td></tr>
+              <tr><td><code>type</code></td><td>是</td><td><code>open-source</code> 或 <code>closed-source</code></td></tr>
+              <tr><td><code>version</code></td><td>是</td><td>语义化版本，必须等于 ZIP 内清单的 <code>version</code></td></tr>
+              <tr><td><code>updatedAt</code></td><td>是</td><td><code>YYYY-MM-DD</code></td></tr>
+              <tr><td><code>platforms</code></td><td>是</td><td>非空数组，取值 <code>windows</code> / <code>macos</code> / <code>linux</code> / <code>android</code> / <code>ios</code> / <code>web</code></td></tr>
+              <tr><td><code>download</code></td><td>视类型</td><td>公开 HTTPS 地址，不能带用户名密码</td></tr>
+              <tr><td><code>sha256</code></td><td>是</td><td>64 位十六进制，必须与包字节一致</td></tr>
+              <tr><td><code>license</code> / <code>repo</code></td><td>开源必填</td><td>许可证标识与公开仓库</td></tr>
+              <tr><td><code>tags</code></td><td>否</td><td>小写标签，最多 8 个</td></tr>
+              <tr><td><code>minAppVersion</code></td><td>否</td><td>最低客户端版本</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="docs-warn">
+          <span class="docs-note-label">注意</span>
+          <p>
+            <code>download</code> 不能指向 <code>releases/latest/</code>。客户端会同时校验
+            <code>sha256</code> 和包内 <code>version</code>，上游一发新版本，清单里的两个值立刻失配，
+            用户侧看到的就是「插件校验失败」。请用打了版本号的 release 资源，或把 ZIP 托管到市场。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="release">
+        <div class="docs-section-head">
+          <b>38</b>
+          <span>发布 / RELEASE</span>
+          <span>PR FLOW</span>
+        </div>
+
+        <h2>发版流程</h2>
+
+        <dl class="steps">
+          <li>
+            <h4>算哈希</h4>
+            <p>打包之后算 SHA-256，把它填进清单的 <code>sha256</code>。</p>
+          </li>
+          <li>
+            <h4>自检</h4>
+            <p>
+              在 <code>lazer-web</code> 仓库里跑
+              <code>npm run check:plugins</code>。它会检查字段、市场托管 ZIP 是否存在、哈希是否对得上；
+              加 <code>-- --remote</code> 还会把外部 <code>download</code> 抓下来对一遍。
+            </p>
+          </li>
+          <li>
+            <h4>提 PR</h4>
+            <p>
+              改 <code>public/plugin/plugins.json</code>，按
+              <a href="https://github.com/chuxuehaocai/lazer-web/blob/main/.github/PULL_REQUEST_TEMPLATE/plugin-listing.md" target="_blank" rel="noreferrer">上架模板</a>
+              写清插件类型与版本。没有自动上架通道，所有变更都要经过一次合并的 PR。
+            </p>
+          </li>
+          <li>
+            <h4>合并即上线</h4>
+            <p>
+              Vercel 会重新构建站点，<code>/plugin/plugins.json</code> 随即更新。
+              <code>npm run build</code> 会先跑一遍校验，清单写错时构建直接失败，坏条目不会被发布。
+            </p>
+          </li>
+        </dl>
+
+        <div class="code-block" data-lang="powershell">
+          <pre><code># 打包
+Compress-Archive -Path .\manifest.json, .\main.lua, .\api.lua `
+  -DestinationPath .\community.example.music.zip -Force
+
+# 算哈希
+(Get-FileHash .\community.example.music.zip -Algorithm SHA256).Hash.ToLower()
+
+# 校验市场清单
+npm run check:plugins
+npm run check:plugins -- --remote</code></pre>
+        </div>
+
+        <div class="docs-note">
+          <span class="docs-note-label">说明</span>
+          <p>
+            市场托管 ZIP 放在 <code>public/plugin/&lt;作者&gt;/&lt;插件 id&gt;/&lt;版本&gt;/&lt;插件 id&gt;.zip</code>，
+            随 PR 一起提交，不需要额外文件服务器。开源插件的新版本可以直接发 Release，
+            只有元数据变化时才需要改清单；闭源插件每次发版都要提 PR。
+          </p>
+        </div>
+      </section>
+
+      <section class="docs-section" id="examples">
+        <div class="docs-section-head">
+          <b>39</b>
+          <span>参考 / EXAMPLES</span>
+          <span>REAL CODE</span>
+        </div>
+
+        <h2>官方示例</h2>
+
+        <div class="card-grid">
+          <article class="card">
+            <span class="card-index">01 / FRONTEND</span>
+            <h3>独立 HTML 前端</h3>
+            <p>
+              完整的 HTML/CSS/JS 页面加 Lua WebSocket 桥，支持播放控制、队列、歌词、歌单、搜索与统计。
+              直接用浏览器打开本地文件就能连原生后端，不需要 WebView 或 npm。
+            </p>
+          </article>
+          <article class="card">
+            <span class="card-index">02 / NATIVE</span>
+            <h3>原生诊断页</h3>
+            <p>
+              按需触发的音频诊断与歌词按钮，不注册轮询计时器，权限在首次用户操作时才申请，可以直接拿它当原生接入的参考。
+            </p>
+          </article>
+          <article class="card">
+            <span class="card-index">03 / MARKET</span>
+            <h3>已上架插件</h3>
+            <p>
+              市场里的网易云、酷狗、YouTube 与 B 站插件都是真实工程，
+              可以直接下载 ZIP 解开看清单与模块划分。
+            </p>
+          </article>
+        </div>
+
+        <p class="docs-prose">
+          示例代码在客户端仓库的 <code>examples/</code> 目录下：
+          <code>lua-frontend</code> 与 <code>lua-native-diagnostics</code>。
+        </p>
+      </section>
+
+      <section class="docs-section" id="compat">
+        <div class="docs-section-head">
+          <b>40</b>
+          <span>参考 / COMPAT</span>
+          <span>NATIVE · WEB</span>
+        </div>
+
+        <h2>兼容性</h2>
+
+        <p class="docs-intro">
+          同一份插件跑在原生客户端和 Web 版上。差异集中在「能不能开端口」和「文件系统怎么实现」，
+          其余接口一致。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>项目</th><th>原生</th><th>Web</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>host.info().runtime</code></td><td><code>native</code></td><td><code>web</code></td></tr>
+              <tr><td><code>host.socket</code> / <code>host.socket_server</code></td><td>可用</td><td>不存在（调用即 nil）</td></tr>
+              <tr><td><code>host.websocket_server</code></td><td>可用</td><td>恒定报不支持</td></tr>
+              <tr><td><code>host.websocket</code></td><td>可用</td><td>可用</td></tr>
+              <tr><td><code>host.http</code></td><td><code>dart:io</code>，方法白名单与体积上限在此生效</td><td>转同源代理 <code>/api/plugin-http</code></td></tr>
+              <tr><td><code>host.file</code></td><td>真实文件系统</td><td>浏览器存储，<code>stat.modifiedMs</code> 恒为 0</td></tr>
+              <tr><td>超时处理</td><td>重建 isolate</td><td>不重建 VM</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="compat-versioning">版本与 API</h3>
+
+        <ul class="docs-prose">
+          <li><code>apiVersion</code> 目前只有 <code>1</code>。不认识的版本整包拒绝，不会「尽量兼容」。</li>
+          <li>能力名大小写与分隔符不敏感，可以放心用 <code>home_feed</code> 这样的写法。</li>
+          <li>新客户端跑旧插件时，未实现的能力只是不出现入口，不会报错。</li>
+          <li>旧客户端跑新插件时，多出来的操作会被忽略，但清单里的权限与能力声明仍然生效。</li>
+        </ul>
+      </section>
+
+      <section class="docs-section" id="faq">
+        <div class="docs-section-head">
+          <b>41</b>
+          <span>参考 / FAQ</span>
+          <span>TROUBLESHOOTING</span>
+        </div>
+
+        <h2>常见问题</h2>
+
+        <dl class="field-list">
+          <div class="field">
+            <dt>平台没出现在列表里</dt>
+            <dd>
+              <code>describe</code> 没返回 <code>providers</code>，或平台 <code>id</code>
+              不符合 <code>^[a-z][a-z0-9_-]{1,39}$</code>、与别的平台重复、或者用了保留字
+              <code>local</code>。任何一条不满足都会让整个插件启动失败。
+            </dd>
+          </div>
+          <div class="field">
+            <dt>一直报 Network permission denied</dt>
+            <dd>
+              目标主机没写进 <code>permissions.network</code>，或者用了 <code>http://</code>。
+              注意重定向也是不跟随的：跳到另一个域名会原样返回 <code>3xx</code>，那个域名同样要声明。
+            </dd>
+          </div>
+          <div class="field">
+            <dt>首页没有推荐 / 心动模式 / 榜单</dt>
+            <dd>
+              对应能力没声明，或者声明了但返回空数组。客户端不会因为接口存在就显示一个空模块，
+              所以缺入口通常是 <code>capabilities</code> 的问题。
+            </dd>
+          </div>
+          <div class="field">
+            <dt>歌词显示成纯文本</dt>
+            <dd>
+              没给 <code>synced = true</code> 和带 <code>startMs</code> 的 <code>lines</code>。
+              只给 <code>lrc</code> 字符串也能解析，但逐行数组更可靠。
+            </dd>
+          </div>
+          <div class="field">
+            <dt>列表只有第一页</dt>
+            <dd>
+              最后一页返回了满 <code>limit</code> 条，客户端以为还有下一页。少返回一条，或如实按分页切片。
+            </dd>
+          </div>
+          <div class="field">
+            <dt>请求随机超时</dt>
+            <dd>
+              单次调用有 40 秒墙钟和 25 万条指令两道预算，超时后 VM 会重建。
+              常见原因是循环里逐条拼字符串，或者在一个 <code>call</code> 里串了几十个 HTTP 请求。
+            </dd>
+          </div>
+          <div class="field">
+            <dt>Web 版功能缺失</dt>
+            <dd>
+              浏览器不能监听端口，所以 <code>socket</code> 系列不存在、
+              <code>websocket_server</code> 报不支持。用 <code>host.info().features</code> 判断后再降级。
+            </dd>
+          </div>
+          <div class="field">
+            <dt>更新之后权限又弹了一次</dt>
+            <dd>
+              插件更新会重置按插件存储的授权，这是有意的：避免旧授权被新代码直接复用。
+              把功能设计成「用户点了才申请」，这类弹窗就不会打断使用。
+            </dd>
+          </div>
+          <div class="field">
+            <dt>装上了但什么都没发生</dt>
+            <dd>
+              先看插件管理里有没有「插件启动失败」。启动时入口必须 <code>return</code> 一个带
+              <code>call</code> 的 table，且 <code>require</code> 的模块路径要与 ZIP 内的层级一致。
+            </dd>
+          </div>
+        </dl>
+
+        <div class="docs-end">
+          <span>LZR / LUA PLUGIN · API v1</span>
+          <a href="#top">回到顶部 ↑</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-top">
+        <a class="brand footer-brand" href="/" aria-label="Lazer 首页">
+          <img class="brand-mark" src="/assets/images/mark-ivory.png" width="30" height="30" alt="">
+          <span class="brand-word">LAZER</span>
+        </a>
+
+        <div class="footer-links">
+          <div>
+            <span>DOCS</span>
+            <a href="#overview">插件概览</a>
+            <a href="#manifest">清单字段</a>
+            <a href="#models">数据模型</a>
+            <a href="#permissions">权限模型</a>
+          </div>
+          <div>
+            <span>PRODUCT</span>
+            <a href="/">主页</a>
+            <a href="/plugin">插件市场</a>
+            <a href="https://github.com/chuxuehaocai/lazer-web" target="_blank" rel="noreferrer">GitHub ↗</a>
+          </div>
+          <div>
+            <span>SOURCE</span>
+            <a href="https://github.com/chuxuehaocai/lazer-web/blob/main/plugin/README.md" target="_blank" rel="noreferrer">上架文档 ↗</a>
+            <a href="https://github.com/chuxuehaocai/lazer-web/issues" target="_blank" rel="noreferrer">Issues ↗</a>
+            <a href="/plugin/plugins.json" target="_blank" rel="noreferrer">plugins.json ↗</a>
+          </div>
+          <div>
+            <span>LEGAL</span>
+            <a href="https://github.com/chuxuehaocai/lazer-web" target="_blank" rel="noreferrer">AGPL-3.0 ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-wordmark" aria-hidden="true">LAZER</div>
+
+      <div class="footer-bottom">
+        <span>© 2026 LAZER CONTRIBUTORS</span>
+        <span>DOCS / LUA PLUGIN API 001</span>
+        <span>MADE FOR LISTENING, NOT FOR WATCHING.</span>
+      </div>
+    </div>
+  </footer>
+  <script type="module" src="/assets/js/docs.js"></script>
+</body>
+</html>
