@@ -2802,6 +2802,33 @@ end</code></pre>
             改完对着上表核一遍拼写。皮肤同样接管不了焦点、语义树、输入或权限。
           </p>
         </div>
+
+        <h3 class="docs-h3" id="theme-accent">全局强调色</h3>
+
+        <p class="docs-prose">
+          皮肤令牌是插件自己的皮，强调色是应用本身的颜色。清单里声明
+          <code>permissions.appearance</code> 之后，<code>host.colors()</code>
+          读当前设置，<code>host.set_colors</code> 改它。改的就是设置页里那个强调色，
+          用户随手再改一次也会覆盖插件的结果，两边不各存一份。
+        </p>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>local current = host.colors()
+-- { ok = true, mode = "custom", accent = "#FF3B30" }
+
+host.set_colors({ accent = "#0A84FF" })   -- accent 自带 mode = "custom"
+host.set_colors({ mode = "nowPlaying" })  -- 跟随封面取色
+host.set_colors({ mode = "fixed" })       -- 回到默认配色，保留用户存过的自定义色</code></pre>
+        </div>
+
+        <p class="docs-prose">
+          <code>mode</code> 取 <code>fixed</code>、<code>nowPlaying</code>、
+          <code>custom</code>；<code>accent</code> 只认 <code>#RRGGBB</code>，
+          短写和 <code>0x</code> 前缀会被拒绝，免得插件和取色器对「同一个颜色」有不同理解。
+          两个字段都可以省。写了别的键、给了未知的 <code>mode</code>，或者把
+          <code>accent</code> 和一个不忽略它的 <code>mode</code> 一起给，都会直接报错，
+          而不是悄悄忽略。
+        </p>
       </section>
 
       <section class="docs-section" id="events">
@@ -2881,6 +2908,7 @@ end</code></pre>
               <tr><td><code>websocket</code></td><td>字符串数组</td><td class="is-num">32</td><td>WebSocket 连接目标</td></tr>
               <tr><td><code>websocketServer</code></td><td><code>host:port</code> 数组</td><td class="is-num">16</td><td>WebSocket 监听地址</td></tr>
               <tr><td><code>storage</code></td><td>布尔</td><td>—</td><td>键值存储</td></tr>
+              <tr><td><code>appearance</code></td><td>布尔</td><td>—</td><td>读取和修改全局强调色，见 <a href="#theme-accent">全局强调色</a></td></tr>
               <tr><td><code>filesystem</code></td><td>布尔</td><td>—</td><td>文件沙箱；也接受 <code>files</code> / <code>file</code> 别名</td></tr>
               <tr><td><code>data</code></td><td>字符串数组</td><td class="is-num">5</td><td>本地资料权限，见下</td></tr>
             </tbody>
