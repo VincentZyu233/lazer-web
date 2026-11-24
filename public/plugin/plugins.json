@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T16:00:00+08:00",
+  "updatedAt": "2026-11-24T20:55:00+08:00",
   "plugins": [
     {
       "id": "lazer.netease",
@@ -117,23 +117,23 @@
         "en": "Bilibili"
       },
       "summary": {
-        "zh-CN": "把 B 站当作曲库的 Lua Gateway：扫码 / Cookie 登录、WBI 签名搜索、音质自选播放、视频 AI 字幕同步歌词、收藏夹、排行榜与评论区。",
-        "zh-Hant": "把 B 站當作曲庫的 Lua Gateway：掃碼 / Cookie 登入、WBI 簽名搜尋、音質自選播放、影片 AI 字幕同步歌詞、收藏夾、排行榜與留言區。",
-        "ja": "Bilibili を音楽ライブラリとして使う Lua Gateway。QR／Cookie ログイン、WBI 署名検索、音質選択ストリーミング、動画 AI 字幕による同期歌詞、お気に入り、ランキング、コメントに対応。",
-        "en": "A Lua gateway that turns Bilibili into a music library, with QR and cookie sign-in, WBI-signed search, selectable audio quality, lyrics from the video's own AI subtitles, favorites, charts, and comments."
+        "zh-CN": "把 B 站当作曲库的 Lua Gateway：扫码 / Cookie 登录、WBI 签名搜索、音质自选播放、视频 AI 字幕同步歌词、收藏夹、排行榜与评论区；首页「新发行」按发布时间换源，ASMR / 长内容 / 短内容三通道混合推荐。",
+        "zh-Hant": "把 B 站當作曲庫的 Lua Gateway：掃碼 / Cookie 登入、WBI 簽名搜尋、音質自選播放、影片 AI 字幕同步歌詞、收藏夾、排行榜與留言區；首頁「新發行」按發佈時間換源，ASMR / 長內容 / 短內容三通道混合推薦。",
+        "ja": "Bilibili を音楽ライブラリとして使う Lua Gateway。QR／Cookie ログイン、WBI 署名検索、音質選択ストリーミング、動画 AI 字幕による同期歌詞、お気に入り、ランキング、コメントに対応。ホームの新着棚は公開日時順のソースに切り替え、ASMR／長尺／短尺の三チャンネルで推薦。",
+        "en": "A Lua gateway that turns Bilibili into a music library, with QR and cookie sign-in, WBI-signed search, selectable audio quality, lyrics from the video's own AI subtitles, favorites, charts, and comments. The home new-release shelf now reads a publish-date source and mixes ASMR, long-form and short-form channels."
       },
       "author": "YG",
       "authorUrl": "https://github.com/kumthor",
       "type": "open-source",
-      "version": "0.4.3",
+      "version": "0.6.1",
       "license": "MIT",
       "repo": "https://github.com/kumthor/lazer-plugin-bilibili",
-      "download": "https://lazer.naominet.dev/plugin/YG/community.bilibili.music/0.4.3/community.bilibili.music.zip",
-      "sha256": "fe5b2a112bab49c39353bbb4d5f67392ea747b71574f53fc01c7cb11f91f3163",
+      "download": "https://lazer.naominet.dev/plugin/YG/community.bilibili.music/0.6.1/community.bilibili.music.zip",
+      "sha256": "2693e45c16f3f77b38dbb0343b775f87ccccb436062eeaa607a7030f8f6ec918",
       "platforms": ["windows", "macos", "linux", "android", "ios"],
       "tags": ["gateway", "bilibili", "lua", "lyrics", "streaming"],
       "minAppVersion": "2.0.210",
-      "updatedAt": "2026-11-23"
+      "updatedAt": "2026-11-24"
     }
   ]
 }
