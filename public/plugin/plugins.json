@@ -134,6 +134,33 @@
       "tags": ["gateway", "bilibili", "lua", "lyrics", "streaming"],
       "minAppVersion": "2.0.210",
       "updatedAt": "2026-11-24"
+    },
+    {
+      "id": "community.spotube.music",
+      "name": {
+        "zh-CN": "Spotube",
+        "zh-Hant": "Spotube",
+        "ja": "Spotube",
+        "en": "Spotube"
+      },
+      "summary": {
+        "zh-CN": "Spotube (Spotify) 混合架构 Lua 插件，免登录畅享全球公共曲库、算法歌单与榜单，智能调度低延迟高保真音频流与精准同步歌词。",
+        "zh-Hant": "Spotube (Spotify) 混合架構 Lua 外掛，免登入暢享全球公共曲庫、演算法歌單與榜單，智慧調度低延遲高保真音訊串流與精準同步歌詞。",
+        "ja": "Spotube (Spotify) ハイブリッドアーキテクチャ Lua プラグイン。ログイン不要で世界中の公式プレイリストやランキングを再生し、低遅延ストリーミングと同期歌詞に対応。",
+        "en": "A hybrid Spotube (Spotify) Lua gateway plugin: browse Spotify public tracks, playlists, and charts without sign-in, with intelligent direct audio streaming and timed lyrics."
+      },
+      "author": "VincentZyu",
+      "authorUrl": "https://github.com/VincentZyu233",
+      "type": "open-source",
+      "version": "0.1.0",
+      "license": "AGPL-3.0",
+      "repo": "https://github.com/VincentZyu233/lazer-plugin-spotube",
+      "download": "https://github.com/VincentZyu233/lazer-plugin-spotube/releases/download/v0.1.0/community.spotube.music.zip",
+      "sha256": "77a4d1bf237a8dca033aeb36dc5f24676cec787fa8698c7a56cd0663fe3e20ea",
+      "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
+      "tags": ["gateway", "spotube", "spotify", "lua", "lyrics", "streaming"],
+      "minAppVersion": "2.0.210",
+      "updatedAt": "2026-11-27"
     }
   ]
 }
