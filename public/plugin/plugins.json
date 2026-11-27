@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T20:55:00+08:00",
+  "updatedAt": "2026-11-27T13:45:00+08:00",
   "plugins": [
     {
       "id": "lazer.netease",
@@ -134,6 +134,33 @@
       "tags": ["gateway", "bilibili", "lua", "lyrics", "streaming"],
       "minAppVersion": "2.0.210",
       "updatedAt": "2026-11-24"
+    },
+    {
+      "id": "chuxuehaocai.lazer.theme.earlydev",
+      "name": {
+        "zh-CN": "早期开发主题",
+        "zh-Hant": "早期開發主題",
+        "ja": "アーリー・デベロップメント",
+        "en": "Early Development"
+      },
+      "summary": {
+        "zh-CN": "把 Lazer 早期 parchment 阶段的羊皮纸配色翻成宿主令牌的纯外观皮肤：卡片直角、行高 64、侧栏 232、零毛玻璃、clay 强调色，歌词原文与翻译同色。",
+        "zh-Hant": "把 Lazer 早期 parchment 階段的羊皮紙配色翻成宿主代幣的純外觀面板：卡片直角、行高 64、側欄 232、零毛玻璃、clay 強調色，歌詞原文與譯文同色。",
+        "ja": "Lazer 初期 parchment 期のアイボリー／クレイ配色をホストのトークンに変換する外観専用スキン。カードは直角、行高 64、サイドバー 232、ブラーなし、歌詞は原文と訳文を同色に。",
+        "en": "An appearance-only skin that translates Lazer's early parchment palette into host tokens: square cards, 64px rows, a 232px rail, no glass blur, a clay accent, and lyrics whose translation matches the original tone."
+      },
+      "author": "chuxuehaocai",
+      "authorUrl": "https://github.com/chuxuehaocai",
+      "type": "open-source",
+      "version": "1.0.0",
+      "license": "MIT",
+      "repo": "https://github.com/chuxuehaocai/lazer_early_development_theme",
+      "download": "https://lazer.naominet.dev/plugin/chuxuehaocai/chuxuehaocai.lazer.theme.earlydev/1.0.0/chuxuehaocai.lazer.theme.earlydev.zip",
+      "sha256": "f57b64bf6e4f82102fc6b9f36a191fdafd05f4249451e5ae1c69976a00113861",
+      "platforms": ["windows", "macos", "linux", "android", "ios"],
+      "tags": ["theme", "parchment", "clay", "ui", "lua"],
+      "minAppVersion": "2.1.100",
+      "updatedAt": "2026-11-27"
     }
   ]
 }
