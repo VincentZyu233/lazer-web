@@ -163,7 +163,7 @@
       "updatedAt": "2026-11-27"
     },
     {
-      "id": "community.spotube.music",
+      "id": "lazer.spotube",
       "name": {
         "zh-CN": "Spotube",
         "zh-Hant": "Spotube",
@@ -179,11 +179,11 @@
       "author": "VincentZyu",
       "authorUrl": "https://github.com/VincentZyu233",
       "type": "open-source",
-      "version": "0.1.4",
+      "version": "0.1.5",
       "license": "AGPL-3.0",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-spotube",
-      "download": "https://github.com/VincentZyu233/lazer-plugin-spotube/releases/download/v0.1.4/community.spotube.music.zip",
-      "sha256": "d5057672b0bcd8e31ba0c42ef83beb5783bc22303e3762772235b010eb243cc0",
+      "download": "https://github.com/VincentZyu233/lazer-plugin-spotube/releases/download/v0.1.5/lazer.spotube.zip",
+      "sha256": "95ee80ca7af30691a463f60b7169972be7e0ac0d9984658a854d2923ae2f7a92",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "spotube", "spotify", "lua", "lyrics", "streaming", "favorites"],
       "minAppVersion": "2.0.210",
