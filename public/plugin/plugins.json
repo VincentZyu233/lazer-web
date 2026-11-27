@@ -161,6 +161,33 @@
       "tags": ["theme", "parchment", "clay", "ui", "lua"],
       "minAppVersion": "2.1.100",
       "updatedAt": "2026-11-27"
+    },
+    {
+      "id": "community.spotube.music",
+      "name": {
+        "zh-CN": "Spotube",
+        "zh-Hant": "Spotube",
+        "ja": "Spotube",
+        "en": "Spotube"
+      },
+      "summary": {
+        "zh-CN": "结合 Spotify 官方曲库元数据与 YouTube 纯净音频流（Spotube = Spotify + YouTube）的混合架构 Lua 插件，免登录畅享全球公共曲库、算法歌单与榜单，支持低延迟高保真音频流与精准同步歌词。",
+        "zh-Hant": "結合 Spotify 官方曲庫詮釋資料與 YouTube 純淨音訊串流（Spotube = Spotify + YouTube）的混合架構 Lua 外掛，免登入暢享全球公共曲庫、演算法歌單與榜單，支援低延遲高保真音訊串流與精準同步歌詞。",
+        "ja": "Spotify 公式メタデータと YouTube 音声ストリームを融合（Spotube = Spotify + YouTube）したハイブリッド Lua プラグイン。ログイン不要で公式曲庫・プレイリスト・ランキングを再生し、低遅延ストリーミングと同期歌詞に対応。",
+        "en": "A hybrid Lua gateway plugin combining Spotify metadata with YouTube audio streaming (Spotube = Spotify + YouTube): browse public tracks, playlists, and charts without sign-in, with low-latency streaming and timed lyrics."
+      },
+      "author": "VincentZyu",
+      "authorUrl": "https://github.com/VincentZyu233",
+      "type": "open-source",
+      "version": "0.1.4",
+      "license": "AGPL-3.0",
+      "repo": "https://github.com/VincentZyu233/lazer-plugin-spotube",
+      "download": "https://github.com/VincentZyu233/lazer-plugin-spotube/releases/download/v0.1.4/community.spotube.music.zip",
+      "sha256": "d5057672b0bcd8e31ba0c42ef83beb5783bc22303e3762772235b010eb243cc0",
+      "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
+      "tags": ["gateway", "spotube", "spotify", "lua", "lyrics", "streaming", "favorites"],
+      "minAppVersion": "2.0.210",
+      "updatedAt": "2026-11-27"
     }
   ]
 }
