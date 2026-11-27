@@ -2722,6 +2722,8 @@ if operation == "theme" then
       name = "Example Dark",
       elements = {
         groupedCardRadius = 18,
+        cornerScale = 0.5,
+        railWidth = 232,
         listTileMinHeight = 52,
         pageTitleCompactSize = 36,
         displayWeight = 800,
@@ -2753,6 +2755,9 @@ end</code></pre>
             </thead>
             <tbody>
               <tr><td><code>groupedCardRadius</code></td><td class="is-num">14</td><td>0–40</td></tr>
+              <tr><td><code>cornerScale</code></td><td class="is-num">1</td><td>0–2（组件类表面的系数；卡片圆角见 <code>groupedCardRadius</code>）</td></tr>
+              <tr><td><code>railWidth</code></td><td>0（自适应 216–264）</td><td>0–420</td></tr>
+              <tr><td><code>playerBarHeight</code> / <code>compactPlayerBarHeight</code></td><td>0 / 0</td><td>0–200 / 0–160</td></tr>
               <tr><td><code>listTileMinHeight</code></td><td class="is-num">50</td><td>0–160</td></tr>
               <tr><td><code>listTileVerticalPadding</code></td><td class="is-num">11</td><td>0–48</td></tr>
               <tr><td><code>pageTitleCompactSize</code> / <code>pageTitleRegularSize</code></td><td class="is-num">34 / 32</td><td>0–72</td></tr>
@@ -2802,6 +2807,154 @@ end</code></pre>
             改完对着上表核一遍拼写。皮肤同样接管不了焦点、语义树、输入或权限。
           </p>
         </div>
+
+        <h3 class="docs-h3" id="theme-colors">颜色令牌</h3>
+
+        <p class="docs-prose">
+          <code>elements.colors</code> 与 <code>elements.darkColors</code> 覆盖宿主的语义颜色，
+          宿主仍然掌管对比度、焦点、语义树和所有 Widget。槽位名与内置 Apple 调色板一致，
+          也接受 <code>canvas</code>、<code>ink</code>、<code>hairline</code>、<code>clay</code>、
+          <code>playerSurface</code> 这类别名；值写 <code>#rgb</code>、<code>#rrggbb</code>、
+          <code>#aarrggbb</code> 或 <code>0xAARRGGBB</code> 都行。
+          <code>darkColors</code> 不写就沿用 <code>colors</code>，只做浅色的皮肤不用写两遍。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>槽位</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>background</code> / <code>groupedBackground</code></td><td>页面画布、分组列表底</td></tr>
+              <tr><td><code>secondaryBackground</code> / <code>tertiaryBackground</code></td><td>画布上浮的两层</td></tr>
+              <tr><td><code>secondaryGroupedBackground</code> / <code>tertiaryGroupedBackground</code></td><td>卡片、列表行</td></tr>
+              <tr><td><code>label</code> / <code>secondaryLabel</code> / <code>tertiaryLabel</code> / <code>quaternaryLabel</code></td><td>主文字 → 最弱文字</td></tr>
+              <tr><td><code>fill</code> / <code>secondaryFill</code> / <code>tertiaryFill</code></td><td>高亮底、主打卡片底</td></tr>
+              <tr><td><code>separator</code> / <code>opaqueSeparator</code></td><td>发丝线与不透明分隔</td></tr>
+              <tr><td><code>accent</code> / <code>accentSoft</code></td><td>唯一强调色与它的低透明度版本（浅色约 9%，深色约 15%）</td></tr>
+              <tr><td><code>glass</code> / <code>glassStrong</code></td><td>玻璃材质与播放条表面</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block" data-lang="lua">
+          <pre><code>elements = {
+  colors = {
+    canvas = "#F0EEE6",     -- 别名 → background
+    surface = "#FAF9F5",    -- 别名 → secondaryGroupedBackground
+    ink = "#141413",        -- 别名 → label
+    muted = "#87867F",      -- 别名 → secondaryLabel
+    hairline = "#CCCBC8",   -- 别名 → separator
+    clay = "#D97757",       -- 别名 → accent
+    playerSurface = "#141413", -- 别名 → glassStrong
+  },
+  darkColors = { background = "#191918", label = "#F0EEE6" },
+}</code></pre>
+        </div>
+
+        <h3 class="docs-h3" id="theme-now-playing">正在播放页与背景</h3>
+
+        <p class="docs-prose">
+          监听画布可以整块交给皮肤排版：左栏封面、间距、一条竖发丝线、右栏阅读面。
+          这些值全为 <code>0</code> 时沿用内置的等比两栏，给了才走皮肤的版心。
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>令牌</th><th>默认</th><th>范围</th><th>作用</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>nowPlayingArtworkFraction</code></td><td class="is-num">0</td><td>0–0.9</td><td>左栏宽 = clamp(宽 × 系数, min, max)；0 关闭皮肤版心</td></tr>
+              <tr><td><code>nowPlayingArtworkMin</code> / <code>nowPlayingArtworkMax</code></td><td class="is-num">0 / 0</td><td>0–1200</td><td>上面那条 clamp 的下限与上限</td></tr>
+              <tr><td><code>nowPlayingSidePadding</code></td><td class="is-num">0</td><td>0–200</td><td>画布左右留白；0 跟随 4% clamp 28–80。同族的 <code>nowPlayingSidePaddingMax</code> 目前只做校验与序列化，还没接进排版</td></tr>
+              <tr><td><code>nowPlayingTitleSize</code> / <code>nowPlayingSubtitleSize</code> / <code>nowPlayingMetaSize</code></td><td class="is-num">0 / 0 / 0</td><td>0–96 / 0–72 / 0–72</td><td>曲名、翻译行、歌手字号；0 跟随内置档位</td></tr>
+              <tr><td><code>nowPlayingCoverRadius</code> / <code>nowPlayingDockHeight</code></td><td class="is-num">0 / 0</td><td>0–64 / 0–240</td><td>封面圆角（&gt; 0 才覆盖全局圆角设置）、底部传输 dock 高度</td></tr>
+              <tr><td><code>backgroundPlayMode</code></td><td><code>""</code></td><td><code>off</code>（也认 <code>none</code>）/ <code>static</code> / <code>dynamic</code> / <code>""</code></td><td><code>off</code> = 完全不构建专辑色流，直接铺画布色；<code>static</code> / <code>dynamic</code> 保留专辑色流；其余值等于 <code>""</code>，沿用用户设置</td></tr>
+              <tr><td><code>backgroundOpacity</code> / <code>backgroundBlurSigma</code> / <code>backgroundVeilAlpha</code></td><td class="is-num">1 / -1 / -1</td><td>0–1 / -1–96 / -1–1</td><td>背景层不透明度、模糊、遮罩；-1 = 沿用用户设置</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="docs-h3" id="theme-user-overrides">圆角与字体：用户的选择优先</h3>
+
+        <p class="docs-prose">
+          令牌是<strong>默认值</strong>，不是强制值。两处用户设置能压过皮肤，
+          因为它们是用户自己调出来的：
+        </p>
+
+        <div class="table-scroll">
+          <table class="docs-table">
+            <thead>
+              <tr><th>用户设置</th><th>相关令牌</th><th>谁生效</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>设置 → 外观 → 圆角设置</td>
+                <td>卡片：<code>groupedCardRadius</code>；按钮/胶囊：<code>cornerScale</code></td>
+                <td>
+                  「跟随主题设置」时卡片用皮肤的 <code>groupedCardRadius</code>、组件用 <code>cornerScale</code>；
+                  「自行调节」时用户的 px 直接压过 <code>groupedCardRadius</code>，组件按 <code>px / 16</code> 缩放
+                </td>
+              </tr>
+              <tr>
+                <td>字体自定义 → 某分类字重 / 歌词字重</td>
+                <td><code>displayWeight</code>、<code>titleWeight</code>、<code>bodyWeight</code>、<code>labelWeight</code>、<code>lyricWeight</code></td>
+                <td>用户动过就用户说了算，没动过才用皮肤</td>
+              </tr>
+              <tr>
+                <td>字体自定义 → 字体族 / 字号缩放</td>
+                <td>—</td>
+                <td>皮肤不能指定字体族，也不参与缩放</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="docs-prose">
+          圆角设置的单位是 <strong>px</strong>，滑块<strong>一直都在</strong>：
+        </p>
+
+        <ul class="docs-prose">
+          <li>
+            <strong>跟随主题设置</strong>：卡片圆角 = 皮肤的 <code>groupedCardRadius</code>，
+            设置页显示的也是这个数（例如皮肤写 <code>groupedCardRadius = 0</code>，
+            设置里就写「0 px（主题）」，看着是直角就是直角）。
+          </li>
+          <li>
+            <strong>自行调节</strong>：滑块 0–32 px，<code>0 px</code> 全直角、
+            <code>16 px</code> 等于组件原本的圆角、<code>32 px</code> 加倍。
+            这个值<strong>直接替换</strong>卡片的圆角，而不是乘在皮肤的 0 上 ——
+            否则皮肤只要写 0，滑块就永远调不动。往里一拖会自动切到「自行调节」。
+          </li>
+        </ul>
+
+        <p class="docs-prose">
+          组件类表面（播放按钮、胶囊导航、头像）由 <code>cornerScale</code> 控制：
+          跟随主题时用皮肤的值，自行调节时按 <code>px / 16</code> 缩放。
+          所以调卡片滑块不会把播放按钮一起拍方。
+        </p>
+
+        <p class="docs-prose">
+          <strong>封面也走这一套</strong>：歌单/专辑封面、「最近播放」里的小卡片都用同一个卡片圆角，
+          客户端里就是 <code>AppCover</code> 与 <code>AppArtistTrackCard</code> 读
+          <code>AppleShape.cardRadiusOf</code>。
+          <code>AppCover</code> 自带一个「短边四分之一」的上限：44 px 的列表缩略图在 24 px 设置下
+          收到 11 px，不会变成圆形；大封面（160、190、270+）碰不到这个上限，完全跟着设置走。
+          首页那张 330 px 的推荐封面自己传的是 <code>followCornerSetting: false</code>，
+          圆角由外层 <code>ClipRRect</code> 按卡片圆角裁出来。
+          播放队列另外走 <code>AppleShape.thumbnailRadiusOf</code>。
+          头像（<code>ClipOval</code>）、圆形播放指示、被外层裁过的拼贴小块显式关闭
+          （<code>followCornerSetting: false</code>），保持固定形状。
+        </p>
+
+        <p class="docs-prose">
+          皮肤令牌是启动时读的，但<strong>用户改设置会重读</strong>：动一下插件设置项或插件页面控件，
+          宿主会在 <code>setting_changed</code> / <code>page_event</code> 之后重新调用
+          <code>describe</code> + <code>theme</code>，把新皮肤换上并重绘。
+          所以像 <code>cornerScale</code> 这种「用户会调的令牌」请在插件里每次现算，
+          不要缓存在模块级变量里；重读失败时宿主保留上一份皮肤，不会闪回默认主题。
+        </p>
 
         <h3 class="docs-h3" id="theme-accent">全局强调色</h3>
 
