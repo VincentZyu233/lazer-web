@@ -156,7 +156,7 @@
       "license": "AGPL-3.0",
       "repo": "https://github.com/VincentZyu233/lazer-plugin-spotube",
       "download": "https://github.com/VincentZyu233/lazer-plugin-spotube/releases/download/v0.1.2/community.spotube.music.zip",
-      "sha256": "e76e3f461e97ffa63bfe635ac4f6ddde86a1a3f4b719a4c2d501dac0250780f2",
+      "sha256": "da6cb9a8efdf479ff7f2f311a23a76d1a8e9a7c70cbe449fdcaa46fbcad99995",
       "platforms": ["windows", "macos", "linux", "android", "ios", "web"],
       "tags": ["gateway", "spotube", "spotify", "lua", "lyrics", "streaming", "favorites"],
       "minAppVersion": "2.0.210",
